@@ -436,10 +436,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>../../ttcut_mac/ui</normaloff>../../ttcut_mac/ui</iconset>
-    </property>
     <widget class="QMenu" name="menuRecentProjects">
      <property name="title">
       <string>Recent Projects</string>
@@ -464,7 +460,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionFileNew">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/filenew_16.xpm</normaloff>:/pixmaps/pixmaps/filenew_16.xpm</iconset>
    </property>
    <property name="text">
@@ -482,7 +478,7 @@
   </action>
   <action name="actionFileOpen">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</iconset>
    </property>
    <property name="text">
@@ -497,7 +493,7 @@
   </action>
   <action name="actionFileSave">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/filesave_16.xpm</normaloff>:/pixmaps/pixmaps/filesave_16.xpm</iconset>
    </property>
    <property name="text">
@@ -512,7 +508,7 @@
   </action>
   <action name="actionFileSaveAs">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/filesaveas_16.xpm</normaloff>:/pixmaps/pixmaps/filesaveas_16.xpm</iconset>
    </property>
    <property name="text">
@@ -527,7 +523,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/exit_16.xpm</normaloff>:/pixmaps/pixmaps/exit_16.xpm</iconset>
    </property>
    <property name="text">
@@ -536,7 +532,7 @@
   </action>
   <action name="actionSaveCurrentFrame">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/saveimage_16.xpm</normaloff>:/pixmaps/pixmaps/saveimage_16.xpm</iconset>
    </property>
    <property name="text">
@@ -545,7 +541,7 @@
   </action>
   <action name="actionSettings">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/settings_16.xpm</normaloff>:/pixmaps/pixmaps/settings_16.xpm</iconset>
    </property>
    <property name="text">
@@ -562,7 +558,7 @@
   </action>
   <action name="actionOpenVideo">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</iconset>
    </property>
    <property name="text">
@@ -577,7 +573,7 @@
   </action>
   <action name="actionOpenAudio">
    <property name="icon">
-    <iconset resource="../../ttcut_mac/ui/mainwindow.qrc">
+    <iconset resource="ui/mainwindow.qrc">
      <normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</iconset>
    </property>
    <property name="text">
@@ -648,7 +644,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../ttcut_mac/ui/mainwindow.qrc"/>
+  <include location="mainwindow.qrc"/>
  </resources>
  <connections/>
 </ui>
