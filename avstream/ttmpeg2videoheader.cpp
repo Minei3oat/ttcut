@@ -323,6 +323,27 @@ bool TTPicturesHeader::readHeader( TTFileBuffer* mpeg2_stream )
     header_offset = mpeg2_stream->position() - 8;
     parseBasicData( header_data );
 
+    // search for next start code
+    int count_zeros = 0;
+    quint8 value;
+    do
+    {
+      mpeg2_stream->readByte(value);
+      if ( value == 0x00 )
+      {
+        count_zeros++;
+      }
+      else if ( value != 1 )
+      {
+        count_zeros = 0;
+      }
+    }
+    while ( value != 0x01 || count_zeros < 2 );
+
+    mpeg2_stream->seekForward( 1 );
+    mpeg2_stream->readByte( header_data, 5 );
+    parseExtensionData( header_data );
+
     return true;
   }
   catch (TTFileBufferException)
@@ -348,6 +369,15 @@ void TTPicturesHeader::parseBasicData( quint8* data, int offset )
   picture_coding_type = (int)((data[offset+1] & 0x38) >> 3);
   temporal_reference  = (int)((data[offset+0] << 2) + ((data[offset+1] & 0xC0) >> 6));
   vbv_delay           = ((data[offset+1] & 0x07) << 13) + (data[offset+2] << 5) + ((data[offset+3] & 0xF8) >> 3);
+}
+
+/* /////////////////////////////////////////////////////////////////////////////
+ * Parse basic picture coding extension data
+ */
+void TTPicturesHeader::parseExtensionData( quint8* data, int offset )
+{
+  progressive_frame = ((data[offset+4] & 0x80) == 0x80);
+  top_field_first   = ((data[offset+3] & 0x80) == 0x80);
 }
 
 /* /////////////////////////////////////////////////////////////////////////////

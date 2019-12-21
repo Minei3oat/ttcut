@@ -82,7 +82,7 @@ enum mpeg2StartCodes
     userdata_start_code           = 0xb2,
     sequence_start_code           = 0xb3,
     sequence_error_code           = 0xb4,
-    sequence_extension_code       = 0xb5,
+    extension_start_code          = 0xb5,
     sequence_end_code             = 0xb7,
     group_start_code              = 0xb8,
     sequence_extension_id         = 0x01,
@@ -163,6 +163,7 @@ class TTPicturesHeader : public TTMpeg2VideoHeader
   bool    readHeader( TTFileBuffer* mpeg2_stream );
   bool    readHeader( TTFileBuffer* mpeg2_stream, quint64 offset );
   void    parseBasicData( quint8* data, int offset=0 );
+  void    parseExtensionData( quint8* data, int offset=0 );
   QString codingTypeString();
 
   // from picture_header [00]
@@ -170,5 +171,6 @@ class TTPicturesHeader : public TTMpeg2VideoHeader
   int     picture_coding_type;
   int     vbv_delay;
   bool    progressive_frame;
+  bool    top_field_first;
 };
 #endif //TTMPEG2VIDEOHEADER_H

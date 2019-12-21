@@ -47,6 +47,8 @@ void TTEncodeParameter::print(char* prefix)
   log->debugMsg( prefix, QString("bitrate         : %1"   ).arg(videoBitrate()) );
   log->debugMsg( prefix, QString("max bitrate     : %1"   ).arg(videoMaxBitrate()) );
   log->debugMsg( prefix, QString("framerate       : %1"   ).arg(videoFPS()) );
+  log->debugMsg( prefix, QString("interlaced      : %1"   ).arg(videoInterlaced()) );
+  log->debugMsg( prefix, QString("top field first : %1"   ).arg(videoTopFieldFirst()) );
   log->debugMsg( prefix, "----------------------------------------------------" );
 }
 

@@ -982,6 +982,10 @@ void TTMpeg2VideoStream::encodePart(int start, int end, TTCutParameter* cr)
   encParams.setVideoAspectCode(seq_head->aspect_ratio_information);
   encParams.setVideoBitrate(seq_head->bitRateKbit());
 
+  TTPicturesHeader* pic_head = (TTPicturesHeader*) header_list->getNextHeader(current_index-1, TTMpeg2VideoHeader::picture_start_code);
+  encParams.setVideoInterlaced(!pic_head->progressive_frame);
+  encParams.setVideoTopFieldFirst(pic_head->top_field_first);
+
   TTTranscodeProvider* transcode_prov = new TTTranscodeProvider(encParams);
 
   connect(transcode_prov, SIGNAL(statusReport(int, const QString&, quint64)),

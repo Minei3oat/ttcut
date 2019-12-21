@@ -57,6 +57,10 @@ class TTEncodeParameter
     float     videoBitrate()                           { return vBitrate; }
     void      setVideoMaxBitrate(float value)          { vMaxBitrate = value; }
     float     videoMaxBitrate()                        { return vMaxBitrate; }
+    void      setVideoInterlaced(bool value)           { vInterlaced = value; }
+    bool      videoInterlaced()                        { return vInterlaced; }
+    void      setVideoTopFieldFirst(bool value)        { vTopFieldFirst = value; }
+    bool      videoTopFieldFirst()                     { return vTopFieldFirst; }
     int       start() { return mStartIndex; }
     void       setStart(int value) { mStartIndex = value; }
     int       end() { return mEndIndex; }
@@ -75,6 +79,8 @@ class TTEncodeParameter
     int       vAspectCode;
     float     vBitrate;
     float     vMaxBitrate;
+    bool      vInterlaced;
+    bool      vTopFieldFirst;
 };
 
 #endif //TTENCODEPARAMETER_H
