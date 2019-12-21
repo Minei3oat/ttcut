@@ -33,20 +33,20 @@
 /* /////////////////////////////////////////////////////////////////////////////
  * Print out the encode parameter for debug and logging purpose
  */
-void print(char* prefix)
+void TTEncodeParameter::print(char* prefix)
 {
-  TTMesasgeLogger* log = TTMessageLogger::getInstance();
+  TTMessageLogger* log = TTMessageLogger::getInstance();
 
   log->debugMsg( prefix, "----------------------------------------------------" );
   log->debugMsg( prefix, "encoder parameter:" );
   log->debugMsg( prefix, "----------------------------------------------------" );
-  log->debugMsg( prefix, "avi-file    : %s",    qPrintable(aviFileInfo().absoluteFilePath()) );
-  log->debugMsg( prefix, "mpeg-file   : %s",    qPrintable(mpeg2FileInfo().absoluteFilePath()) );
-  log->debugMsg( prefix, "widhtxheight: %dx%d", videoWidth(), videoHeight() );
-  log->debugMsg( prefix, "aspect-code : %d",    videoAspectCode() );
-  log->debugMsg( prefix, "bitrate     : %f",    videoBitrate() );
-  log->debugMsg( prefix, "max bitrate : %f",    videoMaxBitrate() );
-  log->debugMsg( prefix, "framerate   : %f",    videoFPS() );
+  log->debugMsg( prefix, QString("avi-file        : %1"   ).arg(qPrintable(aviFileInfo().absoluteFilePath())) );
+  log->debugMsg( prefix, QString("mpeg-file       : %1"   ).arg(qPrintable(mpeg2FileInfo().absoluteFilePath())) );
+  log->debugMsg( prefix, QString("widhtxheight    : %1x%2").arg(videoWidth()).arg(videoHeight()) );
+  log->debugMsg( prefix, QString("aspect-code     : %1"   ).arg(videoAspectCode()) );
+  log->debugMsg( prefix, QString("bitrate         : %1"   ).arg(videoBitrate()) );
+  log->debugMsg( prefix, QString("max bitrate     : %1"   ).arg(videoMaxBitrate()) );
+  log->debugMsg( prefix, QString("framerate       : %1"   ).arg(videoFPS()) );
   log->debugMsg( prefix, "----------------------------------------------------" );
 }
 

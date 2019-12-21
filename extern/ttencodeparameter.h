@@ -30,6 +30,8 @@
 #ifndef TTENCODEPARAMETER_H
 #define TTENCODEPARAMETER_H
 
+#include <QFileInfo>
+
 /* /////////////////////////////////////////////////////////////////////////////
  * Class for parameter common for all encoder
  */
