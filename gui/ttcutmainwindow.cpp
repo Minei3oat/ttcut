@@ -736,7 +736,7 @@ void TTCutMainWindow::onAVItemChanged(TTAVItem* avItem)
   cutOutFrame->onAVDataChanged(avItem);
   audioFileList->onAVDataChanged(avItem);
 
-  onNewFramePos( 0 );
+  onNewFramePos( avItem->videoStream()->currentIndex() );
 
   streamNavigator->onAVItemChanged(mpCurrentAVDataItem);
 

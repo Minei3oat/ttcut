@@ -74,7 +74,9 @@ void TTCurrentFrame::onAVDataChanged(TTAVItem* avData)
 	mpeg2Stream = (TTMpeg2VideoStream*)avData->videoStream();
 
 	mpegWindow->openVideoStream(mpeg2Stream);
-	mpegWindow->moveToFirstFrame();
+	mpegWindow->showFrameAt(mpeg2Stream->currentIndex());
+
+	updateCurrentPosition();
 }
 
 //! Returns the current frame position in stream
