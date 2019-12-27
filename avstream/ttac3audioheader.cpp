@@ -97,7 +97,7 @@ int TTAC3AudioHeader::bitRate()
 
 QString& TTAC3AudioHeader::bitRateString()
 {
-  str_bit_rate = QString("%1 KBit/s").arg(bitRate());
+  str_bit_rate = QString("%1 KBit/s").arg(bitRate()/1024.0);
 
   return str_bit_rate;
 }

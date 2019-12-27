@@ -134,7 +134,7 @@ int TTMpegAudioHeader::bitRate()
  
 QString& TTMpegAudioHeader::bitRateString()
 {
-  str_bit_rate = QString("%1 KBit/s").arg(bitRate());
+  str_bit_rate = QString("%1 KBit/s").arg(bitRate()/1024.0);
   //str_bit_rate->sprintf( "%d KBit/s", bitRate() );
 
   return str_bit_rate;
