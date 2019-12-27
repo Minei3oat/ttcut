@@ -74,7 +74,7 @@
      </property>
      <column>
       <property name="text" >
-       <string>Filname</string>
+       <string>Filename</string>
       </property>
      </column>
      <column>
