@@ -9,6 +9,8 @@ logfile.log
 *.o
 *.tmp
 *~
+*.so
+*.pro.user
 
 # ignore some special directories
 res
