@@ -97,7 +97,32 @@
      </column>
      <column>
       <property name="text" >
+       <string>New Cut-Out</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
        <string>Audiooffset</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>Duration</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>Size</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>Total Duration</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string>Total Size</string>
       </property>
      </column>
     </widget>

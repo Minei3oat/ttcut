@@ -87,8 +87,8 @@ void TTCutFrameNavigation::checkCutPosition(TTAVItem* avData)
 {
 	TTVideoStream* vs = avData->videoStream();
 	currentPosition = vs->currentIndex();
-	//currentTime = vs->currentFrameTime().toString("hh:mm:ss.zzz");
-	currentTime = vs->currentFrameTime().toString("hh:mm:ss");
+	currentTime = vs->currentFrameTime().toString("hh:mm:ss.zzz");
+	//currentTime = vs->currentFrameTime().toString("hh:mm:ss");
 	currentFrameType = vs->currentFrameType();
 
 	pbSetCutIn->setEnabled(vs->isCutInPoint(-1));
@@ -330,8 +330,8 @@ void TTCutFrameNavigation::onEditCut(const TTCutItem& cutData)
 	cutInPosition = cutData.cutInIndex();
 	cutOutPosition = cutData.cutOutIndex();
 
-	//szTemp1 = cutData.getCutInTime().toString("hh:mm:ss.zzz");
-	szTemp1 = cutData.cutInTime().toString("hh:mm:ss");
+	szTemp1 = cutData.cutInTime().toString("hh:mm:ss.zzz");
+	// szTemp1 = cutData.cutInTime().toString("hh:mm:ss");
 		szTemp2.sprintf(" (%d)", cutInPosition);
 
 	if (cutData.cutInFrameType() == 1)
@@ -344,8 +344,8 @@ void TTCutFrameNavigation::onEditCut(const TTCutItem& cutData)
 	szTemp1 += szTemp2;
 	laCutInPosition->setText(szTemp1);
 
-	//szTemp1 = cutData.getCutOutTime().toString("hh:mm:ss.zzz");
-	szTemp1 = cutData.cutOutTime().toString("hh:mm:ss");
+	szTemp1 = cutData.cutOutTime().toString("hh:mm:ss.zzz");
+	// szTemp1 = cutData.cutOutTime().toString("hh:mm:ss");
 	szTemp2.sprintf(" (%d)", cutOutPosition);
 
 	if (cutData.cutOutFrameType() == 1)

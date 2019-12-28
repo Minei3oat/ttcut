@@ -30,26 +30,87 @@
 #include "ttcutsettingsencoder.h"
 
 #include "common/ttcut.h"
+#include "extern/iencodeprovider.h"
+
+#include <QFileDialog>
+#include <QPluginLoader>
 
   
 TTCutSettingsEncoder::TTCutSettingsEncoder(QWidget* parent)
 :QWidget(parent)
 {
   setupUi(this);
+
+  connect(pbAddEncoder,        SIGNAL(clicked()),         SLOT(onAddEncoder()));
+  connect(pbRemoveEncoder,     SIGNAL(clicked()),         SLOT(onRemoveEncoder()));
+  connect(pbConfigureEncoder,  SIGNAL(clicked()),         SLOT(onConfigureEncoder()));
 }
 
 void TTCutSettingsEncoder::setTitle(__attribute__((unused))const QString& title)
 {
 }
 
+void TTCutSettingsEncoder::setEncoderList()
+{
+  while (cbEncoderProg->count() > 0)
+  {
+    cbEncoderProg->removeItem(0);
+  }
+  cbEncoderProg->addItems(TTCut::encoderList->keys());
+}
+
 void TTCutSettingsEncoder::setTabData()
 {
   cbEncodingMode->setChecked( TTCut::encoderMode );
+
+  // fill cbEncoderProg
+  setEncoderList();
+  cbEncoderProg->setCurrentText(TTCut::encoderProg);
 }
 
 void TTCutSettingsEncoder::getTabData()
 {
   TTCut::encoderMode = cbEncodingMode->isChecked();
+  TTCut::encoderProg = cbEncoderProg->currentText();
+  for (QString key : TTCut::encoderList->keys()) {
+    int index = cbEncoderProg->findText(key);
+    if (index == -1)
+    {
+      TTCut::encoderList->remove(key);
+    }
+  }
 }
 
+void TTCutSettingsEncoder::onConfigureEncoder()
+{
+  qobject_cast<IEncodeProvider*>(TTCut::encoderList->value(cbEncoderProg->currentText())->instance())->configDialog();
+}
 
+void TTCutSettingsEncoder::onAddEncoder()
+{
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Add Encoder"));
+  if (fileName.isEmpty())
+  {
+  }
+  else
+  {
+    QPluginLoader* loader = new QPluginLoader(fileName);
+    IEncodeProvider* encoder = qobject_cast<IEncodeProvider*>(loader->instance());
+    if (encoder == NULL)
+    {
+      QString error = loader->errorString();
+      int test = 1;
+    }
+    else
+    {
+      QString pluginName = encoder->name();
+      TTCut::encoderList->insert(pluginName, loader);
+      setEncoderList();
+    }
+  }
+}
+
+void TTCutSettingsEncoder::onRemoveEncoder()
+{
+  cbEncoderProg->removeItem(cbEncoderProg->currentIndex());
+}

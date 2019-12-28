@@ -34,6 +34,9 @@
 
 #include "avstream/ttcommon.h"
 
+#include <QMap>
+#include <QPluginLoader>
+
 #ifndef TTCUT_H
 #define TTCUT_H
 
@@ -137,6 +140,8 @@ class TTCut
    // --------------------------------------------------------------
    // Options
    static bool    encoderMode;
+   static QString encoderProg;
+   static QMap<QString, QPluginLoader*>* encoderList;
 
    // --------------------------------------------------------------
    // muxer settings

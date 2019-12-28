@@ -29,6 +29,7 @@
 
 #include "ttencodeparameter.h"
 #include "common/ttmessagelogger.h"
+#include "iencodeprovider.h"
 
 /* /////////////////////////////////////////////////////////////////////////////
  * Print out the encode parameter for debug and logging purpose
@@ -49,6 +50,7 @@ void TTEncodeParameter::print(char* prefix)
   log->debugMsg( prefix, QString("framerate       : %1"   ).arg(videoFPS()) );
   log->debugMsg( prefix, QString("interlaced      : %1"   ).arg(videoInterlaced()) );
   log->debugMsg( prefix, QString("top field first : %1"   ).arg(videoTopFieldFirst()) );
+  log->debugMsg( prefix, QString("encoder         : %1"   ).arg(encoder()->name()) );
   log->debugMsg( prefix, "----------------------------------------------------" );
 }
 

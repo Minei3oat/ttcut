@@ -112,7 +112,7 @@ void TTCutPreview::initPreview(TTCutList* cutList)
     // first cut-in
     if (i == 0) {
       TTCutItem item = cutList->at(i);
-      selectionString = QString("Start: %1").arg(item.cutInTime().toString("hh:mm:ss"));
+      selectionString = QString("Start: %1").arg(item.cutInTime().toString("hh:mm:ss.zzz"));
       cbCutPreview->addItem( selectionString );
     }
 
@@ -123,8 +123,8 @@ void TTCutPreview::initPreview(TTCutList* cutList)
       TTCutItem item1 = cutList->at(iPos);
       TTCutItem item2 = cutList->at(iPos+1);
       selectionString.sprintf( "Cut %d-%d: %s - %s",i,i+1,
-            qPrintable(item1.cutInTime().toString("hh:mm:ss")),
-            qPrintable(item2.cutOutTime().toString("hh:mm:ss")));
+            qPrintable(item1.cutInTime().toString("hh:mm:ss.zzz")),
+            qPrintable(item2.cutOutTime().toString("hh:mm:ss.zzz")));
         cbCutPreview->addItem( selectionString );
     }
 
@@ -133,7 +133,7 @@ void TTCutPreview::initPreview(TTCutList* cutList)
       iPos = (i-1)*2+1;
 
       TTCutItem item = cutList->at(iPos);
-      selectionString.sprintf( "End: %s", qPrintable(item.cutOutTime().toString("hh:mm:ss")));
+      selectionString.sprintf( "End: %s", qPrintable(item.cutOutTime().toString("hh:mm:ss.zzz")));
       cbCutPreview->addItem( selectionString );
     }
   }

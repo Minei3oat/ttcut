@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>TTCutSettingsEncoder</class>
- <widget class="QWidget" name="TTCutSettingsEncoder" >
-  <property name="geometry" >
+ <widget class="QWidget" name="TTCutSettingsEncoder">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,25 +10,120 @@
     <height>370</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Form1</string>
   </property>
-  <widget class="QCheckBox" name="cbEncodingMode" >
-   <property name="geometry" >
-    <rect>
-     <x>10</x>
-     <y>20</y>
-     <width>200</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text" >
-    <string>Use encoding mode</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout">
+   <item row="2" column="0">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>574</width>
+       <height>151</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Encoder Settings</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="cbEncoderProg"/>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pbConfigureEncoder">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32767</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>configure...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pbAddEncoder">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32767</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>add</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pbRemoveEncoder">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32767</width>
+          <height>32767</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>remove</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="laEncoderProg">
+        <property name="text">
+         <string>Used encoder</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="bgEncOptions">
+     <property name="title">
+      <string>Encoder Options</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cbEncodingMode">
+        <property name="text">
+         <string>Use encoding mode</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <resources>
-  <include location="ttcutsettingsencoder.qrc" />
- </resources>
+ <resources/>
  <connections/>
 </ui>

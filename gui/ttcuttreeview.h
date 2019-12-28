@@ -92,6 +92,10 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
   	QTreeWidgetItem* findItem(const TTCutItem& cutItem);
     TTCutList* cutListFromSelection(bool ignoreSelection=false);
     void createActions();
+    void refreshNewCutOutFromIndex(int index);
+    void refreshNewCutOutFromItem(QTreeWidgetItem* item) { refreshNewCutOutFromIndex(videoCutList->indexOfTopLevelItem(item)); }
+    void refreshNewCutOut(QTreeWidgetItem* item, QTreeWidgetItem* above);
+    void refreshNewCutOut(QTreeWidgetItem* item)         { refreshNewCutOut(item, videoCutList->itemAbove(item)); }
 
   private:
     TTAVData*        mAVData;

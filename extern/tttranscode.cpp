@@ -48,10 +48,7 @@ TTTranscodeProvider::TTTranscodeProvider(TTEncodeParameter& enc_par )
 {
   log               = TTMessageLogger::getInstance();
   this->enc_par     = enc_par;
-  str_command       = "transcode";
   transcode_success = false;
-
-  buildCommandLine();
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
@@ -59,34 +56,6 @@ TTTranscodeProvider::TTTranscodeProvider(TTEncodeParameter& enc_par )
  */
 TTTranscodeProvider::~TTTranscodeProvider()
 {
-}
-
-/* /////////////////////////////////////////////////////////////////////////////
- * Parameter for the encoder
- */
-void TTTranscodeProvider::buildCommandLine()
-{
-  //transcode -i encode.avi --pre_clip 0 -y ffmpeg --export_prof dvd-pal --export_asr 2 -o encode
-  QString str_aspect  = QString("%1").arg(enc_par.videoAspectCode());
-  QString str_format  = QString("%1x%2").arg(enc_par.videoWidth()).arg(enc_par.videoHeight());
-  QString str_bitrate = QString("%1").arg(enc_par.videoBitrate());
-
-  strl_command_line.clear();
-
-  strl_command_line << "-i"
-		    << enc_par.aviFileInfo().absoluteFilePath()
-				<< "-x"
-				<< "avi"
-		    << "--pre_clip"
-		    << "0"
-	      << "--export_prof"
-		    << "dvd"            // dvd-pal
-		    << "--export_asr"
-		    << str_aspect
-		    << "-o"
-		    << enc_par.mpeg2FileInfo().absoluteFilePath();
-
-  log->infoMsg(__FILE__, __LINE__, QString("%1").arg(strl_command_line.join(" ")));
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
@@ -121,7 +90,9 @@ bool TTTranscodeProvider::encodePart(TTVideoStream* vStream, int start, int end)
   connectSignals(proc);
 
   // start the process; if successfully started() was emitted otherwise error()
-  proc->start(str_command, strl_command_line);
+  QString str_command_line = enc_par.encoder()->buildCommandLine(&enc_par);
+  log->infoMsg(__FILE__, __LINE__, QString("%1").arg(str_command_line));
+  proc->start(str_command_line);
 
   int update = 10;
   //proc->waitForFinished();
@@ -185,11 +156,11 @@ void TTTranscodeProvider::onProcFinished(int e_code, QProcess::ExitStatus e_stat
 
   switch (e_status) {
     case QProcess::NormalExit:
-      procMsg = tr("Transcode exit normally ... done(0)");
+      procMsg = tr("%1 exit normally ... done(0)").arg(enc_par.encoder()->name());
       transcode_success = true;
       break;
     case QProcess::CrashExit:
-      procMsg = tr("Transcode crashed");
+      procMsg = tr("%1 crashed").arg(enc_par.encoder()->name());
       transcode_success = false;
       break;
     default:

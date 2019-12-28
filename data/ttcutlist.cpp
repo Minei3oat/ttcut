@@ -215,9 +215,17 @@ QString TTCutItem::fileName() const
  */
 QString TTCutItem::cutInString() const
 {
-  return QString("%1 (%2)").
-    arg(cutInTime().toString("hh:mm:ss")).
-    arg(mCutInIndex);
+  QString frametype = "";
+  switch (cutInFrameType())
+  {
+    case 1: frametype = " [I]"; break;
+    case 2: frametype = " [P]"; break;
+    case 3: frametype = " [B]"; break;
+  }
+  return QString("%1 (%2)%3").
+    arg(cutInTime().toString("hh:mm:ss.zzz")).
+    arg(mCutInIndex).
+    arg(frametype);
 }
 
 /*!
@@ -225,9 +233,17 @@ QString TTCutItem::cutInString() const
  */
 QString TTCutItem::cutOutString() const
 {
-  return QString("%1 (%2)").
-    arg(cutOutTime().toString("hh:mm:ss")).
-    arg(mCutOutIndex);
+  QString frametype = "";
+  switch (cutOutFrameType())
+  {
+    case 1: frametype = " [I]"; break;
+    case 2: frametype = " [P]"; break;
+    case 3: frametype = " [B]"; break;
+  }
+  return QString("%1 (%2)%3").
+    arg(cutOutTime().toString("hh:mm:ss.zzz")).
+    arg(mCutOutIndex).
+    arg(frametype);
 }
 
 /*!
@@ -236,7 +252,7 @@ QString TTCutItem::cutOutString() const
 QString TTCutItem::cutLengthString() const
 {
   return QString("%1 (%2 MB)").
-    arg(cutLengthTime().toString("hh:mm:ss")).
+    arg(cutLengthTime().toString("hh:mm:ss.zzz")).
     arg(cutLengthBytes()/1024.0/1024.0);
 }
 

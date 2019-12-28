@@ -134,7 +134,9 @@ QStringList TTCut::recentFileList;
 QString TTCut::versionString = "TTCut - 1.0.1";
 
 // Options
-bool TTCut::encoderMode = false;
+bool    TTCut::encoderMode = false;
+QString TTCut::encoderProg = "transcode";
+QMap<QString, QPluginLoader*>* TTCut::encoderList = new QMap<QString, QPluginLoader*>({{"transcode", new QPluginLoader()}});
 
 // --------------------------------------------------------------
 // muxer settings

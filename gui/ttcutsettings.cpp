@@ -30,6 +30,9 @@
 
 
 #include "ttcutsettings.h"
+#include "../extern/iencodeprovider.h"
+
+#include <QPluginLoader>
 
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -116,6 +119,23 @@ void TTCutSettings::readSettings()
   // ---------------------------------------------------------------------------
   beginGroup( "/Encoder" );
   TTCut::encoderMode = value( "EncoderMode/", TTCut::encoderMode ).toBool();
+  TTCut::encoderProg = value( "EncoderProg/", TTCut::encoderProg ).toBool();
+  beginGroup("/EncoderList");
+  if (childGroups().count() > 0)
+  {
+    TTCut::encoderList->clear();
+    for (QString group : childGroups())
+    {
+      beginGroup(group);
+      QPluginLoader* loader = new QPluginLoader((value("PluginPath").toString()));
+      IEncodeProvider* encoder = qobject_cast<IEncodeProvider*>(loader->instance());
+      encoder->configure(value("Configuration").toString());
+      encoder->setName(group);
+      TTCut::encoderList->insert(group, loader);
+      endGroup();
+    }
+  }
+  endGroup();
   endGroup();
 
   // Muxer settings
@@ -234,6 +254,16 @@ void TTCutSettings::writeSettings()
   // ---------------------------------------------------------------------------
   beginGroup( "/Encoder" );
   setValue( "EncoderMode/",     TTCut::encoderMode );
+  setValue( "EncoderProg/",     TTCut::encoderProg );
+  beginGroup("EncoderList");
+  for (QString key : TTCut::encoderList->keys())
+  {
+    beginGroup(key);
+    setValue("PluginPath", TTCut::encoderList->value(key)->fileName());
+    setValue("Configuration", qobject_cast<IEncodeProvider*>(TTCut::encoderList->value(key)->instance())->configuration());
+    endGroup();
+  }
+  endGroup();
   endGroup();
 
   // Muxer settings

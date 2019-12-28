@@ -474,16 +474,41 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../ui/cutlistwidget.ui" line="100"/>
+        <source>New Cut-Out</source>
+        <translation type="unfinished">Neues Ende</translation>
+    </message>
+    <message>
+        <location filename="../ui/cutlistwidget.ui" line="105"/>
         <source>Audiooffset</source>
         <translation type="unfinished">Audioversatz</translation>
     </message>
     <message>
-        <location filename="../ui/cutlistwidget.ui" line="238"/>
+        <location filename="../ui/cutlistwidget.ui" line="110"/>
+        <source>Duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/cutlistwidget.ui" line="115"/>
+        <source>Size</source>
+        <translation type="unfinished">Größe</translation>
+    </message>
+    <message>
+        <location filename="../ui/cutlistwidget.ui" line="120"/>
+        <source>Total Duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/cutlistwidget.ui" line="125"/>
+        <source>Total Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/cutlistwidget.ui" line="263"/>
         <source>Preview</source>
         <translation type="unfinished">Vorschau</translation>
     </message>
     <message>
-        <location filename="../ui/cutlistwidget.ui" line="267"/>
+        <location filename="../ui/cutlistwidget.ui" line="292"/>
         <source>Cut</source>
         <translation type="unfinished">Schneiden</translation>
     </message>
@@ -1026,102 +1051,102 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>TTCutTreeView</name>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="513"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="575"/>
         <source>Move &amp;up</source>
         <translation type="unfinished">Nach &amp;oben</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="515"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="577"/>
         <source>Move selected cut one position upward</source>
         <translation type="unfinished">Verschiebt den ausgewählten Eintrag eine Position nach oben</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="518"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="580"/>
         <source>&amp;Delete</source>
         <translation type="unfinished">&amp;Entfernen</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="520"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="582"/>
         <source>Remove selected cut from list</source>
         <translation type="unfinished">Entfernt den ausgewählten Eintrag aus der Liste</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="523"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="585"/>
         <source>Duplicate Cut</source>
         <translation type="unfinished">Schnitt duplizieren</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="525"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="587"/>
         <source>Duplicate the selected cut</source>
         <translation type="unfinished">Dupliziert den ausgwählten Schnittpunkt</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="528"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="590"/>
         <source>Move d&amp;own</source>
         <translation type="unfinished">Nach &amp;unten</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="530"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="592"/>
         <source>Move selected cut one position downward</source>
         <translation type="unfinished">Verschiebt den ausgewählten Eintrag eine Position nach unten</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="533"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="595"/>
         <source>Edit &amp;cut</source>
         <translation type="unfinished">Schnitt &amp;bearbeiten</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="535"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="597"/>
         <source>Edit selected cut</source>
         <translation type="unfinished">Öffnet den ausgewählten Schnitt zum Bearbeiten</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="538"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="600"/>
         <source>Preview cut</source>
         <translation type="unfinished">Vorschau</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="540"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="602"/>
         <source>Preview selected cut</source>
         <translation type="unfinished">Vorschau des ausgewählten Schnittpunktes</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="543"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="605"/>
         <source>Cut selected entries</source>
         <translation type="unfinished">Auswahl schneiden</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="544"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="606"/>
         <source>Cut the selected entries</source>
         <translation type="unfinished">Schneidet nur die ausgwählten Einträge</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="547"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="609"/>
         <source>Goto Cut-In</source>
         <translation type="unfinished">Gehe zum Anfang</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="549"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="611"/>
         <source>Goto selected cut-in position</source>
         <translation type="unfinished">Zeigt die Anfangsposition des ausgewählten Eintrags an</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="552"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="614"/>
         <source>Goto Cut-Out</source>
         <translation type="unfinished">Gehe zum Ende</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="554"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="616"/>
         <source>Goto selected cut-out position</source>
         <translation type="unfinished">Zeigt die Endposition des ausgewählten Eintrags an</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="557"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="619"/>
         <source>Set Cut-Out</source>
         <translation type="unfinished">Setze Ende</translation>
     </message>
     <message>
-        <location filename="../gui/ttcuttreeview.cpp" line="558"/>
+        <location filename="../gui/ttcuttreeview.cpp" line="620"/>
         <source>Show selected cut-out frame in cut-out window</source>
         <translation type="unfinished">Zeigt das letzte Bild des ausgewählten Eintrags im Cut-Out Fenster an</translation>
     </message>

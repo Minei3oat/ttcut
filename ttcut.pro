@@ -116,6 +116,7 @@ HEADERS     = common/ttcut.h\
               mpeg2window/ttmpeg2window2.h\
               avilib/avilib.h\
               extern/imuxprovider.h\
+              extern/iencodeprovider.h\
               extern/tttranscode.h\
               extern/ttmplexprovider.h\
               gui/ttcutsettings.h\

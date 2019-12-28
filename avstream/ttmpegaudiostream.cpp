@@ -265,7 +265,7 @@ int TTMPEGAudioStream::createHeaderList( )
   }
 
   log->debugMsg(__FILE__, __LINE__, QString("header list created: %1").arg(header_list->count()));
-  log->debugMsg(__FILE__, __LINE__, QString("abs stream length:   %1").arg(streamLengthTime().toString("hh:mm:ss")));
+  log->debugMsg(__FILE__, __LINE__, QString("abs stream length:   %1").arg(streamLengthTime().toString("hh:mm:ss.zzz")));
 
   return header_list->count();
 }

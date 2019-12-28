@@ -32,6 +32,8 @@
 
 #include <QFileInfo>
 
+class IEncodeProvider;
+
 /* /////////////////////////////////////////////////////////////////////////////
  * Class for parameter common for all encoder
  */
@@ -41,6 +43,8 @@ class TTEncodeParameter
     TTEncodeParameter(){};
     ~TTEncodeParameter(){};
 
+    void             setEncoder(IEncodeProvider* value) { vEncoder = value; }
+    IEncodeProvider* encoder()                          { return vEncoder; }
     void      setAVIFileInfo(const QFileInfo& value)   { aviFInfo = value; }
     QFileInfo aviFileInfo()                            { return aviFInfo; }
     void      setMpeg2FileInfo(const QFileInfo& value) { mpeg2FInfo = value; }
@@ -69,6 +73,7 @@ class TTEncodeParameter
     void      print(char* prefix);
 
   private:
+    IEncodeProvider* vEncoder;
     QFileInfo aviFInfo;
     QFileInfo mpeg2FInfo;
     int       mStartIndex;

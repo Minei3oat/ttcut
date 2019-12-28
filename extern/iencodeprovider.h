@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------------------*/
-/* COPYRIGHT: TriTime (c) 2003/2008 / ttcut.tritime.org                       */
+/* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
-/* PROJEKT  : TTCUT 2005                                                      */
-/* FILE     : ttcutsettingsencoder.h                                          */
+/* PROJEKT  : TTCUT 2019                                                      */
+/* FILE     : iencodeprovider.h                                              */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : b. altendorf (E-Mail: b.altendorf@tritime.de)   DATE: 02/26/2006 */
+/* AUTHOR  : Minei3oat                                       DATE: 12/21/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// *** TTCUTSETTINGSENCODER
+// IENCODEPROVIDER
 // ----------------------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
@@ -27,32 +27,23 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTCUTSETTINGSENCODER_H 
-#define TTCUTSETTINGSENCODER_H
+#ifndef IENCODEPROVIDER_H
+#define IENCODEPROVIDER_H
 
-#include "ui_ttcutsettingsencoder.h"
+#include "ttencodeparameter.h"
 
-#include "common/ttcut.h"
+#include <QtPlugin>
 
-
-class TTCutSettingsEncoder : public QWidget, Ui::TTCutSettingsEncoder
+class IEncodeProvider
 {
-  Q_OBJECT
-
   public:
-    TTCutSettingsEncoder(QWidget* parent=0);
-
-    void setTitle( const QString& title );
-    void setTabData();
-    void getTabData();
-
-  private:
-    void setEncoderList();
-
-  protected slots:
-    void onConfigureEncoder();
-    void onAddEncoder();
-    void onRemoveEncoder();
+    virtual QString configDialog() = 0;
+    virtual QString buildCommandLine(TTEncodeParameter* enc_par) = 0;
+    virtual QString configuration() = 0;
+    virtual void    configure(QString configuration) = 0;
+    virtual QString name() = 0;
+    virtual void setName(QString name) = 0;
 };
+Q_DECLARE_INTERFACE(IEncodeProvider, "TTCut.IEncodeProvider/1.0");
 
-#endif
+#endif // IENCODEPROVIDER_H

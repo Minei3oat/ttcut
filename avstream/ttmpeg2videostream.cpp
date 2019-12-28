@@ -975,6 +975,14 @@ void TTMpeg2VideoStream::encodePart(int start, int end, TTCutParameter* cr)
 
   TTEncodeParameter encParams;
 
+  encParams.setEncoder(qobject_cast<IEncodeProvider*>(TTCut::encoderList->value(TTCut::encoderProg)->instance()));
+  if (encParams.encoder() == NULL)
+  {
+    QString msg = QString("Can't get encoder: %1").arg(TTCut::encoderList->value(TTCut::encoderProg)->errorString());
+    log->fatalMsg(__FILE__, __LINE__, msg);
+    throw TTInvalidOperationException(msg);
+  }
+
   encParams.setAVIFileInfo(aviFileInfo);
   encParams.setMpeg2FileInfo(mpeg2FileInfo);
   encParams.setVideoWidth(seq_head->horizontal_size_value);

@@ -34,6 +34,7 @@
 #include "common/istatusreporter.h"
 #include "common/ttcut.h"
 #include "ttencodeparameter.h"
+#include "iencodeprovider.h"
 
 #include <QFileInfo>
 #include <QProcess>
@@ -67,7 +68,6 @@ class TTTranscodeProvider : public IStatusReporter
     void finished(int e_code, QProcess::ExitStatus e_status);
 
   protected:
-    void buildCommandLine();
     void writeAVIFile(TTVideoStream* vs, int start, int end);
     void connectSignals(QProcess* proc);
     void procOutput();
@@ -76,8 +76,6 @@ class TTTranscodeProvider : public IStatusReporter
     TTMessageLogger*  log;
     TTEncodeParameter enc_par;
     QProcess*         proc;
-    QString           str_command;
-    QStringList       strl_command_line;
     int               exit_code;
     bool              transcode_success;
 };

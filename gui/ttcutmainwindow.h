@@ -34,6 +34,7 @@
 #include "ui_ttcutmainwnd_new.h"
 
 #include <QMutexLocker>
+#include <QMainWindow>
 
 #include "common/ttcut.h"
 #include "common/ttmessagelogger.h"

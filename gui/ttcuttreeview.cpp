@@ -32,6 +32,7 @@
 #include "data/ttavdata.h"
 #include "data/ttavlist.h"
 #include "avstream/ttavstream.h"
+#include "common/ttmessagelogger.h"
 
 #include "ttcuttreeview.h"
 
@@ -52,11 +53,27 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
   // set list view header (column) width
   videoCutList->setRootIsDecorated( false );
   QHeaderView* header = videoCutList->header();
-  header->resizeSection(0, 200);
-  header->resizeSection(1, 140);
-  header->resizeSection(2, 140);
-  header->resizeSection(3, 150);
-  header->resizeSection(4,  80);
+  header->hideSection(5);
+  header->hideSection(6);
+  header->hideSection(7);
+  header->hideSection(8);
+  header->hideSection(9);
+  int width = videoCutList->height();
+  TTMessageLogger* log = TTMessageLogger::getInstance();
+  log->debugMsg("TTCutTreeView", QString("%1").arg(width));
+
+  if (width < 1000) {
+      for (int i = 0; i <= 4; i++) {
+        header->resizeSection(i, width/5);
+      }
+  }
+  else
+  {
+    for (int i = 1; i <= 4; i++) {
+      header->resizeSection(i, 200);
+    }
+    header->resizeSection(0, width - 800);
+  }
 
   allowSelectionChanged = true;
   editItemIndex = -1;
@@ -135,9 +152,44 @@ void TTCutTreeView::onAppendItem(const TTCutItem& item)
   treeItem->setText(1, item.cutInString());
   treeItem->setText(2, item.cutOutString());
   treeItem->setText(3, item.cutLengthString());
-  treeItem->setText(4, QString("%1").arg(item.ID().toString())); //TODO: we need this to find cut entry in list
+  treeItem->setText(5, QString("%1").arg(item.ID().toString())); //TODO: we need this to find cut entry in list
+  treeItem->setText(6, QString("%1").arg(item.cutLengthTime().msecsSinceStartOfDay()));
+  treeItem->setText(7, QString("%1").arg(item.cutLengthBytes()));
+
+  refreshNewCutOut(treeItem);
 
   //emit refreshDisplay();
+}
+
+void TTCutTreeView::refreshNewCutOutFromIndex(int index)
+{
+  if (index > videoCutList->topLevelItemCount()) return;
+
+  QTreeWidgetItem* above = videoCutList->topLevelItem(index-1);
+  for (int i = index; i < videoCutList->topLevelItemCount(); i++)
+  {
+    QTreeWidgetItem* item = videoCutList->topLevelItem(i);
+    refreshNewCutOut(item, above);
+    above = item;
+  }
+}
+
+void TTCutTreeView::refreshNewCutOut(QTreeWidgetItem* item, QTreeWidgetItem* above)
+{
+  if (above == NULL)
+  {
+    item->setText(8, item->text(6));
+    item->setText(9, item->text(7));
+    item->setText(4, QString("%1 (%2 MB)").arg(QTime::fromMSecsSinceStartOfDay(item->text(6).toInt()).toString("hh:mm:ss.zzz")).arg(item->text(7).toULongLong()/1024.0/1024.0));
+  }
+  else
+  {
+    quint64 totalBytes = item->text(7).toULongLong() + above->text(9).toULongLong();
+    int     totalMSecs = item->text(6).toInt() + above->text(8).toInt();
+    item->setText(8, QString("%1").arg(totalMSecs));
+    item->setText(9, QString("%1").arg(totalBytes));
+    item->setText(4, QString("%1 (%2 MB)").arg(QTime::fromMSecsSinceStartOfDay(totalMSecs).toString("hh:mm:ss.zzz")).arg(totalBytes/1024.0/1024.0));
+  }
 }
 
 /*!
@@ -150,6 +202,8 @@ void TTCutTreeView::onRemoveItem(int index)
   videoCutList->indexOfTopLevelItem(videoCutList->currentItem());
 
   allowSelectionChanged = true;
+
+  refreshNewCutOutFromIndex(index);
 }
 
 /*!
@@ -170,6 +224,8 @@ void TTCutTreeView::onUpdateItem(const TTCutItem& cItem, const TTCutItem& uitem)
   treeItem->setText(1, uitem.cutInString());
   treeItem->setText(2, uitem.cutOutString());
   treeItem->setText(3, uitem.cutLengthString());
+  treeItem->setText(6, QString("%1").arg(uitem.cutLengthTime().msecsSinceStartOfDay()));
+  treeItem->setText(7, QString("%1").arg(uitem.cutLengthBytes()));
 
   if (editItemIndex >= 0) {
     editItemIndex = -1;
@@ -182,6 +238,8 @@ void TTCutTreeView::onUpdateItem(const TTCutItem& cItem, const TTCutItem& uitem)
 
   emit itemUpdated(cItem);
   emit refreshDisplay();
+
+  refreshNewCutOutFromItem(treeItem);
 }
 
 /*!
@@ -191,7 +249,7 @@ QTreeWidgetItem* TTCutTreeView::findItem(const TTCutItem& cutItem)
 {
 	for (int i = 0; i < videoCutList->topLevelItemCount(); i++) {
 		QTreeWidgetItem* item = videoCutList->topLevelItem(i);
-		if (item->text(4) == QString("%1").arg(cutItem.ID().toString()))
+		if (item->text(5) == QString("%1").arg(cutItem.ID().toString()))
 			return item;
 	}
 	return 0;
@@ -214,6 +272,11 @@ void TTCutTreeView::onEntryUp()
     if ( videoCutList->topLevelItem(i)->isSelected() ) {
       QTreeWidgetItem* pTmpItem = videoCutList->takeTopLevelItem( i );
       videoCutList->insertTopLevelItem( i-1, pTmpItem );
+      QTreeWidgetItem* pTmpOtherItem = videoCutList->topLevelItem( i );
+      pTmpOtherItem->setText(4, pTmpItem->text(4));
+      pTmpOtherItem->setText(8, pTmpItem->text(8));
+      pTmpOtherItem->setText(9, pTmpItem->text(9));
+      refreshNewCutOut(pTmpItem);
 
       emit itemOrderChanged(i, i-1);
     }
@@ -242,6 +305,11 @@ void TTCutTreeView::onEntryDown()
     if ( videoCutList->topLevelItem(i)->isSelected() ) {
       QTreeWidgetItem* pTmpItem = videoCutList->takeTopLevelItem( i );
       videoCutList->insertTopLevelItem( i+1, pTmpItem );
+      QTreeWidgetItem* pTmpOtherItem = videoCutList->topLevelItem( i );
+      pTmpItem->setText(4, pTmpOtherItem->text(4));
+      pTmpItem->setText(8, pTmpOtherItem->text(8));
+      pTmpItem->setText(9, pTmpOtherItem->text(9));
+      refreshNewCutOut(pTmpOtherItem);
 
       emit itemOrderChanged(i, i+1);
     }
@@ -263,13 +331,18 @@ void TTCutTreeView::onEntryDelete()
 
   allowSelectionChanged = false;
 
+  int minIndex = INT_MAX;
+
   for (int i = videoCutList->selectedItems().count()-1; i >= 0; i--) {
     int index = videoCutList->indexOfTopLevelItem(videoCutList->selectedItems()[i]);
     TTCutItem cutItem = mAVData->cutItemAt(index);
     emit removeItem(cutItem);
+    minIndex = index;
   }
 
   emit refreshDisplay();
+
+  refreshNewCutOutFromIndex(minIndex);
 }
 
 /*!
@@ -342,6 +415,7 @@ void TTCutTreeView::onEntryEdit()
 
 /*!
  * onSetCutOut
+ * NOT WORKING!
  */
 void TTCutTreeView::onSetCutOut()
 {

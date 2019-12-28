@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------------------*/
-/* COPYRIGHT: TriTime (c) 2003/2008 / ttcut.tritime.org                       */
+/* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
-/* PROJEKT  : TTCUT 2005                                                      */
-/* FILE     : ttcutsettingsencoder.h                                          */
+/* PROJEKT  : TTENCODEPROVIDERFFMPEG 2019                                     */
+/* FILE     : ttencodeproviderffmpeg.h                                        */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : b. altendorf (E-Mail: b.altendorf@tritime.de)   DATE: 02/26/2006 */
+/* AUTHOR  : Minei3oat                                       DATE: 12/21/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// *** TTCUTSETTINGSENCODER
+// TTENCODEPROVIDERFFMPEG
 // ----------------------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
@@ -27,32 +27,35 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTCUTSETTINGSENCODER_H 
-#define TTCUTSETTINGSENCODER_H
+#ifndef TTENCODEPROVIDERFFMPEG_H
+#define TTENCODEPROVIDERFFMPEG_H
 
-#include "ui_ttcutsettingsencoder.h"
+#include "../../../extern/iencodeprovider.h"
 
-#include "common/ttcut.h"
-
-
-class TTCutSettingsEncoder : public QWidget, Ui::TTCutSettingsEncoder
+class TTEncodeProviderFFmpeg : public QObject, public IEncodeProvider
 {
   Q_OBJECT
+  Q_INTERFACES(IEncodeProvider)
+  Q_PLUGIN_METADATA(IID "TTCut.IEncodeProvider/1.0")
 
   public:
-    TTCutSettingsEncoder(QWidget* parent=0);
+    TTEncodeProviderFFmpeg();
+    ~TTEncodeProviderFFmpeg();
 
-    void setTitle( const QString& title );
-    void setTabData();
-    void getTabData();
+    QString configDialog();
+    QString buildCommandLine(TTEncodeParameter* enc_par);
+    QString configuration();
+    void    configure(QString configuration);
+    QString name() { return eName; }
+    void    setName(QString name) { eName = name; }
 
   private:
-    void setEncoderList();
+    QString videoAspectCodeToString(int videoAspectCode);
 
-  protected slots:
-    void onConfigureEncoder();
-    void onAddEncoder();
-    void onRemoveEncoder();
+    QString eName;
+    QString additional_arguments;
+    QString encoder_path;
+
 };
 
-#endif
+#endif // TTENCODEPROVIDERFFMPEG_H

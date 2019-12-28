@@ -74,6 +74,7 @@ void TTCurrentFrame::onAVDataChanged(TTAVItem* avData)
 	mpeg2Stream = (TTMpeg2VideoStream*)avData->videoStream();
 
 	mpegWindow->openVideoStream(mpeg2Stream);
+	// mpegWindow->moveToFirstFrame();
 	mpegWindow->showFrameAt(mpeg2Stream->currentIndex());
 
 	updateCurrentPosition();
@@ -281,7 +282,12 @@ void TTCurrentFrame::updateCurrentPosition()
   if ( frame_type == 2 ) szTemp2 += " [P]";
   if ( frame_type == 3 ) szTemp2 += " [B]";
 
+  QString szTemp3;
+  TTPicturesHeader* currrentPictureHeader = (TTPicturesHeader*) mpeg2Stream->headerList()->at(mpeg2Stream->indexList()->at(mpeg2Stream->currentIndex())->getHeaderListIndex());
+  szTemp3 = QString(" progressive: %1; top_field_first: %2").arg(currrentPictureHeader->progressive_frame).arg(currrentPictureHeader->top_field_first);
+
   szTemp1 += szTemp2;
+  szTemp1 += szTemp3;
   laCurrentPosition->setText( szTemp1 );
 
   laCurrentPosition->update();

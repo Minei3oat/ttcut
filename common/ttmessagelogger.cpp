@@ -333,8 +333,8 @@ void TTMessageLogger::logMsg(MsgType msgType, QString caller, int line, QString 
     msgTypeStr = "debug";
 
   QString logMsgStr = (line > 0)
-      ? QString("[%1][%2][%3:%4] %5").arg(msgTypeStr).arg(QDateTime::currentDateTime().toString("hh:mm:ss")).arg(msgCaller).arg(line).arg(msgString)
-      : QString("[%1][%2][%3] %4").arg(msgTypeStr).arg(QDateTime::currentDateTime().toString("hh:mm:ss")).arg(msgCaller).arg(msgString);
+      ? QString("[%1][%2][%3:%4] %5").arg(msgTypeStr).arg(QDateTime::currentDateTime().toString("hh:mm:ss.zzz")).arg(msgCaller).arg(line).arg(msgString)
+      : QString("[%1][%2][%3] %4").arg(msgTypeStr).arg(QDateTime::currentDateTime().toString("hh:mm:ss.zzz")).arg(msgCaller).arg(msgString);
 
   // show message window
   if (show)
