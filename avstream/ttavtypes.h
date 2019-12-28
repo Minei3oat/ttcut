@@ -70,6 +70,7 @@ class TTAVTypes
     ac3_audio,
     mpeg2_demuxed_video,
     mpeg2_mplexed_video,
+    srt_subtitle,
     unknown
   };
 
@@ -122,6 +123,17 @@ class TTVideoType : public TTAVTypes
 
  protected:
   void getVideoStreamType();
+};
+
+class TTSubtitleType : public: TTAVTypes
+{
+ public:
+  TTSubtitleType( QString f_name );
+  ~TTSubtitleType();
+
+ protected:
+  TTSubtitleStream* createSubtitleStream();
+
 };
 
 #endif //TTAVTYPES_H
