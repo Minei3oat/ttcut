@@ -13,6 +13,7 @@
 // TTAVSTREAM (abstract)
 // TTAUDIOSTREAM
 // TTVIDEOSTREAM
+// TTSUBTITLESTREAM
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -24,7 +25,9 @@
 //             |                 +- TTAC3AudioStream
 // TTAVStream -|
 //             |
-//             +- TTVideoStream -TTMpeg2VideoStream
+//             +- TTVideoStream - TTMpeg2VideoStream
+//             |
+//             +- TTSubtitleStream - TTSrtSubtitleStream
 //
 // -----------------------------------------------------------------------------
 

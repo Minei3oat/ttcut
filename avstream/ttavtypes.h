@@ -11,6 +11,7 @@
 // TTAVTYPES
 // TTAUDIOTYPES
 // TTVIDEOTYPES
+// TTSUBTITLETYPES
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -19,7 +20,7 @@
 //
 //            +- TTAudioType
 //            |
-// TTAVTypes -|
+// TTAVTypes -+- TTSubtitleType
 //            |
 //            +- TTVideoType
 //
@@ -53,6 +54,7 @@ class QFileInfo;
 class TTMessageLogger;
 class TTAudioStream;
 class TTVideoStream;
+class TTSubtitleStream;
 
 /* /////////////////////////////////////////////////////////////////////////////
  * Base class for AV stream types
@@ -125,15 +127,16 @@ class TTVideoType : public TTAVTypes
   void getVideoStreamType();
 };
 
-class TTSubtitleType : public: TTAVTypes
+class TTSubtitleType : public TTAVTypes
 {
  public:
   TTSubtitleType( QString f_name );
   ~TTSubtitleType();
 
- protected:
   TTSubtitleStream* createSubtitleStream();
 
+ protected:
+  void getSubtitleStreamType();
 };
 
 #endif //TTAVTYPES_H

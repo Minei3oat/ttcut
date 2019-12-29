@@ -48,6 +48,7 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
     void controlEnabled(bool value);
     void setAVData(TTAVData* avData);
     void clear();
+    void resizeEvent(QResizeEvent* event);
 
   public slots:
     void onAppendItem(const TTCutItem& item);
@@ -96,6 +97,7 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
     void refreshNewCutOutFromItem(QTreeWidgetItem* item) { refreshNewCutOutFromIndex(videoCutList->indexOfTopLevelItem(item)); }
     void refreshNewCutOut(QTreeWidgetItem* item, QTreeWidgetItem* above);
     void refreshNewCutOut(QTreeWidgetItem* item)         { refreshNewCutOut(item, videoCutList->itemAbove(item)); }
+    void refresh(int width);
 
   private:
     TTAVData*        mAVData;

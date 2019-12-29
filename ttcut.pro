@@ -75,6 +75,7 @@ FORMS       = ui/audiofilelistwidget.ui\
               ui/ttprogressform.ui\
               ui/tttaskprogresswidget.ui
 HEADERS     = common/ttcut.h\
+    avstream/ttsrtsubtitlestream.h \
               common/ttthreadtask.h\
               common/ttthreadtaskpool.h\
               common/ttmessagelogger.h\
@@ -147,6 +148,7 @@ HEADERS     = common/ttcut.h\
               gui/ttcutavcutdlg.h\
               gui/ttcutmainwindow.h
 SOURCES     = common/ttcut.cpp\
+              avstream/ttsrtsubtitlestream.cpp \
               common/ttthreadtask.cpp\
               common/ttthreadtaskpool.cpp\  
               common/ttmessagelogger.cpp\

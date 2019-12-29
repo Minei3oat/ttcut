@@ -13,6 +13,7 @@
 // TTAVSTREAM (abstract)
 // TTAUDIOSTREAM
 // TTVIDEOSTREAM
+// TTSUBTITLESTREAM
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -24,7 +25,9 @@
 //             |                 +- TTAC3AudioStream
 // TTAVStream -|
 //             |
-//             +- TTVideoStream -TTMpeg2VideoStream
+//             +- TTVideoStream - TTMpeg2VideoStream
+//             |
+//             +- TTSubtitleStream - TTSrtSubtitleStream
 //
 // -----------------------------------------------------------------------------
 
@@ -196,6 +199,47 @@ protected:
   // intern
   float         frame_rate;
   float         bit_rate;
+};
+
+// -----------------------------------------------------------------------------
+// *** TTSubtitleStream: Class TTSubtitleStream
+// -----------------------------------------------------------------------------
+class TTSubtitleStream : public QObject
+{
+  Q_OBJECT
+
+protected:
+  TTSubtitleStream(const QFileInfo &f_info);
+  virtual ~TTSubtitleStream();
+
+public:
+  QFileInfo* fileInfo() { return stream_info; }
+  QString fileName();
+  QString filePath();
+  QString fileExtension();
+  quint64 streamLengthByte();
+  virtual QTime streamLengthTime() = 0;
+  virtual TTAVTypes::AVStreamType streamType() const = 0;
+  virtual bool isCutInPoint(int pos) = 0;
+  virtual bool isCutOutPoint(int pos) = 0;
+  void         abort();
+  void         setAbort(bool value);
+
+public:
+  virtual int  createHeaderList() = 0;
+  virtual int  createIndexList() = 0;
+  virtual void cut(int start, int end, TTCutParameter* cp) = 0;
+  virtual void copySegment(TTFileBuffer* cut_stream, quint64 start_adr, quint64 end_adr);
+
+protected:
+        TTAVTypes::AVStreamType stream_type;
+  QFileInfo*              stream_info;
+  TTFileBuffer*           stream_buffer;
+  bool                    mAbort;
+  TTMessageLogger*        log;
+
+signals:
+  void statusReport(int state, const QString& msg, quint64 value);
 };
 
 #endif //TTAVSTREAM_H

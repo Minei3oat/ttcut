@@ -58,7 +58,7 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
   header->hideSection(7);
   header->hideSection(8);
   header->hideSection(9);
-  int width = videoCutList->height();
+  int width = videoCutList->width();
   TTMessageLogger* log = TTMessageLogger::getInstance();
   log->debugMsg("TTCutTreeView", QString("%1").arg(width));
 
@@ -90,6 +90,32 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
   connect(videoCutList,    SIGNAL(doubleClicked(const QModelIndex)),          SLOT(onSetCutOut()));
   connect(videoCutList,    SIGNAL(itemSelectionChanged()),                    SLOT(onItemSelectionChanged()));
   connect(videoCutList,    SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onContextMenuRequest(const QPoint&)));
+}
+
+
+void TTCutTreeView::resizeEvent(QResizeEvent* event)
+{
+  refresh(event->size().width());
+}
+
+void TTCutTreeView::refresh(int width)
+{
+  TTMessageLogger* log = TTMessageLogger::getInstance();
+  log->debugMsg("TTCutTreeView", QString("%1").arg(width));
+  QHeaderView* header = videoCutList->header();
+
+  if (width < 1000) {
+      for (int i = 0; i <= 4; i++) {
+        header->resizeSection(i, width/5);
+      }
+  }
+  else
+  {
+    for (int i = 1; i <= 4; i++) {
+      header->resizeSection(i, 200);
+    }
+    header->resizeSection(0, width - 800);
+  }
 }
 
 /*!
