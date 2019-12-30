@@ -13,6 +13,7 @@
 // *** TTAVTYPES
 // *** TTAUDIOTYPES
 // *** TTVIDEOTYPES
+// *** TTSUBTITLETYPES
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -312,8 +313,8 @@ void TTVideoType::getVideoStreamType()
 
 // construct TTSubtitleType object
 // -----------------------------------------------------------------------------
-  TTSubtitleType::TTSubtitleType( QString f_name )
-: TTAVTypes( f_name )
+TTSubtitleType::TTSubtitleType( QString f_name )
+  : TTAVTypes( f_name )
 {
   // if subtitle file exists get video stream type
   if ( av_stream_exists )

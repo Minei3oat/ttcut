@@ -48,7 +48,7 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
     void controlEnabled(bool value);
     void setAVData(TTAVData* avData);
     void clear();
-    void resizeEvent(QResizeEvent* event);
+    void resizeEvent(QResizeEvent* event) { onGeometryChanged(); }
 
   public slots:
     void onAppendItem(const TTCutItem& item);
@@ -74,6 +74,8 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
     void onEntryDuplicate();
     void onClearList();
     void onReloadList();
+    void onGeometryChanged();
+    void onSectionResized(int logicalIndex, int oldSize, int newSize);
 
   signals:
     void removeItem(const TTCutItem& item);
@@ -97,12 +99,13 @@ class TTCutTreeView : public QWidget, Ui::TTCutListWidget
     void refreshNewCutOutFromItem(QTreeWidgetItem* item) { refreshNewCutOutFromIndex(videoCutList->indexOfTopLevelItem(item)); }
     void refreshNewCutOut(QTreeWidgetItem* item, QTreeWidgetItem* above);
     void refreshNewCutOut(QTreeWidgetItem* item)         { refreshNewCutOut(item, videoCutList->itemAbove(item)); }
-    void refresh(int width);
 
   private:
     TTAVData*        mAVData;
     int              editItemIndex;
-    bool      allowSelectionChanged;
+    bool             allowSelectionChanged;
+    bool             userResize;
+    int              sectionSize[5];
     QTreeWidgetItem* currentEditItem;
     QMenu*           contextMenu;
     QAction*         itemUpAction;

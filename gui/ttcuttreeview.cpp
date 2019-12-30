@@ -50,7 +50,6 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
 {
   setupUi( this );
 
-  // set list view header (column) width
   videoCutList->setRootIsDecorated( false );
   QHeaderView* header = videoCutList->header();
   header->hideSection(5);
@@ -58,22 +57,13 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
   header->hideSection(7);
   header->hideSection(8);
   header->hideSection(9);
-  int width = videoCutList->width();
-  TTMessageLogger* log = TTMessageLogger::getInstance();
-  log->debugMsg("TTCutTreeView", QString("%1").arg(width));
 
-  if (width < 1000) {
-      for (int i = 0; i <= 4; i++) {
-        header->resizeSection(i, width/5);
-      }
-  }
-  else
+  // set list view header (column) width
+  for (int i = 0; i < 5; i++)
   {
-    for (int i = 1; i <= 4; i++) {
-      header->resizeSection(i, 200);
-    }
-    header->resizeSection(0, width - 800);
+    sectionSize[i] = -1;
   }
+  onGeometryChanged();
 
   allowSelectionChanged = true;
   editItemIndex = -1;
@@ -90,32 +80,57 @@ TTCutTreeView::TTCutTreeView(QWidget* parent)
   connect(videoCutList,    SIGNAL(doubleClicked(const QModelIndex)),          SLOT(onSetCutOut()));
   connect(videoCutList,    SIGNAL(itemSelectionChanged()),                    SLOT(onItemSelectionChanged()));
   connect(videoCutList,    SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(onContextMenuRequest(const QPoint&)));
+  connect(videoCutList->header(), SIGNAL(geometriesChanged()),                SLOT(onGeometryChanged()));
+  connect(videoCutList->header(), SIGNAL(sectionResized(int, int, int)),      SLOT(onSectionResized(int, int, int)));
 }
 
-
-void TTCutTreeView::resizeEvent(QResizeEvent* event)
+void TTCutTreeView::onSectionResized(int logicalIndex, int oldSize, int newSize)
 {
-  refresh(event->size().width());
+  if (userResize)
+  {
+    sectionSize[logicalIndex] = newSize;
+  }
+  //onGeometryChanged();
 }
 
-void TTCutTreeView::refresh(int width)
+void TTCutTreeView::onGeometryChanged()
 {
-  TTMessageLogger* log = TTMessageLogger::getInstance();
-  log->debugMsg("TTCutTreeView", QString("%1").arg(width));
+  userResize = false;
+  int width = videoCutList->width() - 2*videoCutList->frameWidth();
   QHeaderView* header = videoCutList->header();
 
-  if (width < 1000) {
-      for (int i = 0; i <= 4; i++) {
-        header->resizeSection(i, width/5);
-      }
+  int defaultMinWidth[5] = {200, 170, 170, 180, 180};
+
+  int minWidth = 0;
+  int fixedWidth = 0;
+  for (int i = 0; i < 5; i++)
+  {
+    if (sectionSize[i] < 0)
+    {
+      minWidth += defaultMinWidth[i];
+    }
+    else
+    {
+      fixedWidth += sectionSize[i];
+    }
+  }
+
+  if (width < minWidth + fixedWidth)
+  {
+    for (int i = 0; i < 5; i++)
+    {
+      header->resizeSection(i, sectionSize[i] < 0 ? (width - fixedWidth) * defaultMinWidth[i]/minWidth : sectionSize[i]);
+    }
   }
   else
   {
-    for (int i = 1; i <= 4; i++) {
-      header->resizeSection(i, 200);
+    defaultMinWidth[0] += width - fixedWidth - minWidth;
+    for (int i = 0; i < 5; i++)
+    {
+      header->resizeSection(i, sectionSize[i] < 0 ? defaultMinWidth[i] : sectionSize[i]);
     }
-    header->resizeSection(0, width - 800);
   }
+  userResize = true;
 }
 
 /*!

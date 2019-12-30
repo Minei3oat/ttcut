@@ -539,3 +539,22 @@ int TTVideoStream::moveToPrevPIFrame()
   return (index >= 0) ? current_index=index : current_index;
 }
 
+
+// /////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
+// *** TTSubtitleStream: Base class for all subtitle streams
+// -----------------------------------------------------------------------------
+// /////////////////////////////////////////////////////////////////////////////
+
+
+// constructor with file info and start position
+// -----------------------------------------------------------------------------
+TTSubtitleStream::TTSubtitleStream(const QFileInfo &f_info)
+  : TTAVStream(f_info)
+{
+}
+
+TTSubtitleStream::~TTSubtitleStream()
+{
+}
+
