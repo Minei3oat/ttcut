@@ -372,6 +372,29 @@ quint64 TTFileBuffer::directWriteUInt64(quint64 byte8)
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
+ * Read a line from stream
+ */
+QString TTFileBuffer::readLine(QString delimiter)
+{
+  QString line;
+
+  int delimiterLength = delimiter.count();
+
+  while (!atEnd() && line.right(delimiterLength) != delimiter)
+  {
+    quint8 byte;
+    readByte(byte);
+    line.append(byte);
+  }
+
+  if (line.right(delimiterLength) == delimiter)
+    line.remove(line.count() - delimiterLength, delimiterLength);
+
+  return line;
+}
+
+
+/* /////////////////////////////////////////////////////////////////////////////
  *
  */
 void TTFileBuffer::fillBuffer()

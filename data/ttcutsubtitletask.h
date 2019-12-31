@@ -2,29 +2,14 @@
 /* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
 /* PROJEKT  : TTCUT 2019                                                      */
-/* FILE     : ttsrtsubtitlestream.h                                           */
+/* FILE     : ttcutsubtitletask.cpp                                           */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : Minei3oat                                       DATE: 12/29/2019 */
+/* AUTHOR  : Minei3oat                                       DATE: 12/30/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// TTSRTSUBTITLESTREAM
+// TTCUTSUBTITLETASK
 // ----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Overview
-// -----------------------------------------------------------------------------
-//
-//                               +- TTMpegAudioStream
-//             +- TTAudioStream -|
-//             |                 +- TTAC3AudioStream
-// TTAVStream -|
-//             |
-//             +- TTVideoStream - TTMpeg2VideoStream
-//             |
-//             +- TTSubtitleStream - TTSrtSubtitleStream
-//
-// -----------------------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
 /* This program is free software; you can redistribute it and/or modify it    */
@@ -42,27 +27,44 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTSRTSUBTITLESTREAM_H
-#define TTSRTSUBTITLESTREAM_H
+#ifndef TTCUTSUBTITLETASK_H
+#define TTCUTSUBTITLETASK_H
 
-#include "ttavstream.h"
-#include "common/ttmessagelogger.h"
+#include "common/ttthreadtask.h"
+#include "data/ttmuxlistdata.h"
 
-class TTSrtSubtitleStream : public TTSubtitleStream
+class TTFileBuffer;
+class TTCutParameter;
+class TTSubtitleStream;
+class TTCutList;
+
+//! Runable task for cuttting subtitle streams
+class TTCutSubtitleTask : public TTThreadTask
 {
+  Q_OBJECT
+
   public:
-    TTSrtSubtitleStream(const QFileInfo &f_info);
-    virtual ~TTSrtSubtitleStream();
+    TTCutSubtitleTask();
+    void init(QString tgtFilePath, TTCutList* cutList, int srcSubtitleIndex, TTMuxListDataItem* muxListItem);
 
-    virtual TTAVTypes::AVStreamType streamType() const;
+  protected:
+    void cleanUp();
+    void operation();
 
-    virtual void cut(int start, int end, TTCutParameter* cp);
+  public slots:
+    void onUserAbort();
 
-    virtual int  createHeaderList();
-    virtual int  createIndexList(){return 0;}
+  signals:
+    void finished(QString filePath);
 
-    QString      streamExtension();
-    QTime        streamLengthTime();
+  private:
+    QString            mTgtFilePath;
+    TTCutList*         mpCutList;
+    int                mSrcSubtitleIndex;
+    TTFileBuffer*      mpTgtStream;
+    TTCutParameter*    mpCutParams;
+    TTSubtitleStream*  mpCutStream;
+    TTMuxListDataItem* mMuxListItem;
 };
 
-#endif // TTSRTSUBTITLESTREAM_H
+#endif

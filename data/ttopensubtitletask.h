@@ -2,29 +2,14 @@
 /* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
 /* PROJEKT  : TTCUT 2019                                                      */
-/* FILE     : ttsrtsubtitlestream.h                                           */
+/* FILE     : ttopensubtitletask.h                                            */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : Minei3oat                                       DATE: 12/29/2019 */
+/* AUTHOR  : Minei3oat                                       DATE: 12/30/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// TTSRTSUBTITLESTREAM
+// TTOPENSUBTITLETASK
 // ----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Overview
-// -----------------------------------------------------------------------------
-//
-//                               +- TTMpegAudioStream
-//             +- TTAudioStream -|
-//             |                 +- TTAC3AudioStream
-// TTAVStream -|
-//             |
-//             +- TTVideoStream - TTMpeg2VideoStream
-//             |
-//             +- TTSubtitleStream - TTSrtSubtitleStream
-//
-// -----------------------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
 /* This program is free software; you can redistribute it and/or modify it    */
@@ -42,27 +27,37 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTSRTSUBTITLESTREAM_H
-#define TTSRTSUBTITLESTREAM_H
+#include "common/ttthreadtask.h"
 
-#include "ttavstream.h"
-#include "common/ttmessagelogger.h"
+#include <QString>
+#include <QFileInfo>
 
-class TTSrtSubtitleStream : public TTSubtitleStream
+class TTSubtitleType;
+class TTSubtitleStream;
+class TTAVItem;
+
+//! Runable task for opening subtitle streams
+class TTOpenSubtitleTask : public TTThreadTask
 {
+  Q_OBJECT
+
   public:
-    TTSrtSubtitleStream(const QFileInfo &f_info);
-    virtual ~TTSrtSubtitleStream();
+    TTOpenSubtitleTask(TTAVItem* avItem, QString filePath, int order);
 
-    virtual TTAVTypes::AVStreamType streamType() const;
+  protected:
+    void cleanUp();
+    void operation();
 
-    virtual void cut(int start, int end, TTCutParameter* cp);
+  public slots:
+    void onUserAbort();
 
-    virtual int  createHeaderList();
-    virtual int  createIndexList(){return 0;}
+  signals:
+    void finished(TTAVItem*, TTSubtitleStream*, int);
 
-    QString      streamExtension();
-    QTime        streamLengthTime();
+  private:
+    TTAVItem*         mpAVItem;
+    int               mOrder;
+    QString           mFilePath;
+    TTSubtitleStream* mpSubtitleStream;
+    TTSubtitleType*   mpSubtitleType;
 };
-
-#endif // TTSRTSUBTITLESTREAM_H

@@ -31,6 +31,7 @@
 #include "ttcutprojectdata.h"
 #include "ttcutlist.h"
 #include "ttaudiolist.h"
+#include "ttsubtitlelist.h"
 #include "avstream/ttmpeg2videoheader.h"
 #include "avstream/ttavstream.h"
 #include "common/ttexception.h"
@@ -44,24 +45,35 @@
  */
 TTAVItem::TTAVItem(TTVideoStream* videoStream)
 {
-	mpVideoStream = videoStream;
-	mIsInList     = false;
-	mpAudioList   = new TTAudioList();
-	mpCutList     = new TTCutList();
-	mpMarkerList  = new TTMarkerList();
+	mpVideoStream  = videoStream;
+	mIsInList      = false;
+	mpAudioList    = new TTAudioList();
+	mpSubtitleList = new TTSubtitleList();
+	mpCutList      = new TTCutList();
+	mpMarkerList   = new TTMarkerList();
 
-  connect(mpAudioList, SIGNAL(itemAppended(const TTAudioItem&)),                     SIGNAL(audioItemAppended(const TTAudioItem&)));
+	connect(mpAudioList, SIGNAL(itemAppended(const TTAudioItem&)),                     SIGNAL(audioItemAppended(const TTAudioItem&)));
 	//connect(mpAudioDataList, SIGNAL(itemRemoved(const TTAudioListDataItem&)),
-  //                         SIGNAL(audioItemRemoved(const TTAudioListDataItem&)));
+	//                         SIGNAL(audioItemRemoved(const TTAudioListDataItem&)));
 	connect(mpAudioList, SIGNAL(itemRemoved(int)),                                     SIGNAL(audioItemRemoved(int)));
-  connect(mpAudioList, SIGNAL(itemUpdated(const TTAudioItem&, const TTAudioItem&)),  SIGNAL(audioItemUpdated(const TTAudioItem&, const TTAudioItem&)));
-  //connect(mpAudioDataList, SIGNAL(orderUpdated(const TTAudioListDataItem&, int)),
-  //                         SIGNAL(audioOrderUpdated(const TTAudioListDataItem&, int)));
-	connect(mpAudioList, SIGNAL(itemsSwapped(int, int)),                  												 SIGNAL(audioItemsSwapped(int, int)));
+	connect(mpAudioList, SIGNAL(itemUpdated(const TTAudioItem&, const TTAudioItem&)),  SIGNAL(audioItemUpdated(const TTAudioItem&, const TTAudioItem&)));
+	//connect(mpAudioDataList, SIGNAL(orderUpdated(const TTAudioListDataItem&, int)),
+	//                         SIGNAL(audioOrderUpdated(const TTAudioListDataItem&, int)));
+	connect(mpAudioList, SIGNAL(itemsSwapped(int, int)),                               SIGNAL(audioItemsSwapped(int, int)));
 
-	connect(this,        SIGNAL(updated(TTAVItem*)),    mpAudioList,  SLOT(onRefreshData(TTAVItem*)));
-	connect(this,        SIGNAL(updated(TTAVItem*)),    mpCutList,    SLOT(onRefreshData(TTAVItem*)));
-	connect(this,        SIGNAL(updated(TTAVItem*)),    mpMarkerList, SLOT(onRefreshData(TTAVItem*)));
+	connect(mpSubtitleList, SIGNAL(itemAppended(const TTSubtitleItem&)),                       SIGNAL(subtitleItemAppended(const TTSubtitleItem&)));
+	//connect(mpSubtitleDataList, SIGNAL(itemRemoved(const TTSubtitleListDataItem&)),
+	//                            SIGNAL(subtitleItemRemoved(const TTSubtitleListDataItem&)));
+	connect(mpSubtitleList, SIGNAL(itemRemoved(int)),                                          SIGNAL(subtitleItemRemoved(int)));
+	connect(mpSubtitleList, SIGNAL(itemUpdated(const TTSubtitleItem&, const TTSubtitleItem&)), SIGNAL(subtitleItemUpdated(const TTSubtitleItem&, const TTSubtitleItem&)));
+	//connect(mpSubtitleDataList, SIGNAL(orderUpdated(const TTSubtitleListDataItem&, int)),
+	//                            SIGNAL(subtitleOrderUpdated(const TTSubtitleListDataItem&, int)));
+	connect(mpSubtitleList, SIGNAL(itemsSwapped(int, int)),                                    SIGNAL(subtitleItemsSwapped(int, int)));
+
+	connect(this,        SIGNAL(updated(TTAVItem*)),    mpAudioList,    SLOT(onRefreshData(TTAVItem*)));
+	connect(this,        SIGNAL(updated(TTAVItem*)),    mpSubtitleList, SLOT(onRefreshData(TTAVItem*)));
+	connect(this,        SIGNAL(updated(TTAVItem*)),    mpCutList,      SLOT(onRefreshData(TTAVItem*)));
+	connect(this,        SIGNAL(updated(TTAVItem*)),    mpMarkerList,   SLOT(onRefreshData(TTAVItem*)));
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
@@ -69,9 +81,10 @@ TTAVItem::TTAVItem(TTVideoStream* videoStream)
  */
 TTAVItem::~TTAVItem()
 {
-  if (mpAudioList   != 0) delete mpAudioList;
-  if (mpCutList     != 0) delete mpCutList;
-  if (mpVideoStream != 0) delete mpVideoStream;
+  if (mpAudioList    != 0) delete mpAudioList;
+  if (mpSubtitleList != 0) delete mpSubtitleList;
+  if (mpCutList      != 0) delete mpCutList;
+  if (mpVideoStream  != 0) delete mpVideoStream;
 }
 
 /*!
@@ -93,7 +106,7 @@ bool TTAVItem::isInList()
  */
 void TTAVItem::appendAudioEntry(TTAudioStream* aStream, int order)
 {
-	mpAudioList->append(this, aStream, order);
+        mpAudioList->append(this, aStream, order);
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +114,7 @@ void TTAVItem::appendAudioEntry(TTAudioStream* aStream, int order)
  */
 void TTAVItem::appendAudioEntry(const TTAudioItem& aItem)
 {
-	mpAudioList->append(aItem);
+        mpAudioList->append(aItem);
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +122,7 @@ void TTAVItem::appendAudioEntry(const TTAudioItem& aItem)
  */
 void TTAVItem::removeAudioEntry(const TTAudioItem& aItem)
 {
-	mpAudioList->remove(aItem);
+        mpAudioList->remove(aItem);
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +130,7 @@ void TTAVItem::removeAudioEntry(const TTAudioItem& aItem)
  */
 void TTAVItem::updateAudioEntry(const TTAudioItem& aItem, const TTAudioItem& uItem)
 {
-	mpAudioList->update(aItem, uItem);
+        mpAudioList->update(aItem, uItem);
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +138,58 @@ void TTAVItem::updateAudioEntry(const TTAudioItem& aItem, const TTAudioItem& uIt
  */
 void TTAVItem::onRemoveAudioItem(int index)
 {
-	mpAudioList->remove(mpAudioList->at(index));
+        mpAudioList->remove(mpAudioList->at(index));
 }
 
 void TTAVItem::onSwapAudioItems(int oldIndex, int newIndex)
 {
-	mpAudioList->swap(oldIndex, newIndex);
+        mpAudioList->swap(oldIndex, newIndex);
+}
+
+/*
+ *  ///////////////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTAVItem::appendSubtitleEntry(TTSubtitleStream* sStream, int order)
+{
+        mpSubtitleList->append(this, sStream, order);
+}
+
+/* ///////////////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTAVItem::appendSubtitleEntry(const TTSubtitleItem& sItem)
+{
+        mpSubtitleList->append(sItem);
+}
+
+/* ///////////////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTAVItem::removeSubtitleEntry(const TTSubtitleItem& sItem)
+{
+        mpSubtitleList->remove(sItem);
+}
+
+/* ///////////////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTAVItem::updateSubtitleEntry(const TTSubtitleItem& sItem, const TTSubtitleItem& uItem)
+{
+        mpSubtitleList->update(sItem, uItem);
+}
+
+/* ///////////////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTAVItem::onRemoveSubtitleItem(int index)
+{
+        mpSubtitleList->remove(mpSubtitleList->at(index));
+}
+
+void TTAVItem::onSwapSubtitleItems(int oldIndex, int newIndex)
+{
+        mpSubtitleList->swap(oldIndex, newIndex);
 }
 
 /* ///////////////////////////////////////////////////////////////////////////////////////

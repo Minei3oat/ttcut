@@ -1,27 +1,30 @@
 /*----------------------------------------------------------------------------*/
-/* COPYRIGHT: TriTime (c) 2003/2010 / www.tritime.org                         */
+/* COPYRIGHT: TriTime (c) 2003/2005 / www.tritime.org                         */
 /*----------------------------------------------------------------------------*/
 /* PROJEKT  : TTCUT 2005                                                      */
-/* FILE     : ttheaderlist.h                                                  */
+/* FILE     : ttaudioheaderlist.cpp                                           */
 /*----------------------------------------------------------------------------*/
 /* AUTHOR  : b. altendorf (E-Mail: b.altendorf@tritime.de)   DATE: 05/12/2005 */
-/* MODIFIED: b. altendorf                                    DATE: 06/20/2008 */
 /* MODIFIED:                                                 DATE:            */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// TTHEADERLIST
+// *** TTAUDIOHEADERLIST
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // Overview
 // -----------------------------------------------------------------------------
 //
-//               +- TTAudioHeaderList 
-//               | 
-// TTHeaderList -+- TTSubtitleHeaderList
+//               +- TTAudioHeaderList
 //               |
+//               +- TTAudioIndexList
+// TTHeaderList -|
 //               +- TTVideoHeaderList
+//               |
+//               +- TTVideoIndexList
+//               |
+//               +- TTSubtitleHeaderList
 //
 // -----------------------------------------------------------------------------
 
@@ -41,33 +44,53 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTHEADERLIST_H
-#define TTHEADERLIST_H
+#include "ttsubtitleheaderlist.h"
 
-#include "ttavheader.h"
-#include "common/ttmessagelogger.h"
+bool subtitleHeaderListCompareItems( TTAVHeader* head_1, TTAVHeader* head_2 );
 
-#include <QVector>
-
-// -----------------------------------------------------------------------------
-// TTHeaderList: Pointer list for TTAVHeader objects
-// -----------------------------------------------------------------------------
-class TTHeaderList : public QVector<TTAVHeader*>
+TTSubtitleHeaderList::TTSubtitleHeaderList( int size )
+  : TTHeaderList( size )
 {
- public:
-  virtual ~TTHeaderList();
 
-  virtual void add( TTAVHeader* header );
-  virtual void deleteAll();
+}
 
- protected:
-  TTHeaderList(int size);
-  virtual void sort() = 0;
-  virtual void checkIndexRange(int index);
+TTSubtitleHeader* TTSubtitleHeaderList::subtitleHeaderAt( int index )
+{
+  checkIndexRange(index);
+    
+  return (TTSubtitleHeader*)at( index );
+}
 
- protected:
-  TTMessageLogger* log;
-  int              initial_size;
-};
+int TTSubtitleHeaderList::searchTimeIndex( double s_time )
+{
+  int abs_time = 0;
+  int search_time = (int)s_time*1000;
+  TTSubtitleHeader* subtitle_header;
 
-#endif //TTHEADERLIST
+  int index = 0;
+
+  do
+  {
+    subtitle_header = (TTSubtitleHeader*)at(index);
+    abs_time = (int)(subtitle_header->startMSec());
+    index++;
+  }
+  while ( abs_time < search_time && index < size());
+
+  // return index of next subtitle, if search_time is after end of found subtitle
+  return subtitle_header->endMSec() < search_time ? index : index-1;
+}
+
+void TTSubtitleHeaderList::sort()
+{
+  qSort( begin(), end(), subtitleHeaderListCompareItems );
+}
+
+bool subtitleHeaderListCompareItems( TTAVHeader* head_1, TTAVHeader* head_2 )
+{
+  // the values for the display order of two items are compared
+  int time1 = (int)((TTSubtitleHeader*)head_1)->startMSec();
+  int time2 = (int)((TTSubtitleHeader*)head_2)->startMSec();
+
+  return (time1 < time2);
+}

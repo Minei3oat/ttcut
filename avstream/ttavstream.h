@@ -64,6 +64,8 @@ class TTVideoIndexList;
 class TTVideoIndex;
 class TTAudioHeaderList;
 class TTAudioHeader;
+class TTSubtitleHeaderList;
+class TTSubtitleHeader;
 class TTCutParameter;
 
 // -----------------------------------------------------------------------------
@@ -210,6 +212,11 @@ public:
   TTSubtitleStream(const QFileInfo &f_info);
   virtual ~TTSubtitleStream();
 
+  // header list
+  TTSubtitleHeaderList* headerList();
+
+  TTSubtitleHeader* headerAt( int index );
+
   // virtual cut methods
   virtual bool isCutInPoint(int)  {return true;}
   virtual bool isCutOutPoint(int)  {return true;}
@@ -217,7 +224,8 @@ public:
 protected:
   // audio_delay > 0: audio starts before video (in ms)
   // audio_delay < 0: audio starts after  video (in ms)
-  int    subtitle_delay;
+  int subtitle_delay;
+  TTSubtitleHeaderList* header_list;
 };
 
 #endif //TTAVSTREAM_H

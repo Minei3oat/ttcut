@@ -196,7 +196,7 @@ QStringList TTMplexProvider::createMplexArguments(const QString& videoFilePath, 
 {
   QStringList mplexArgs;
 
-  mplexArgs << "-f8"
+  mplexArgs << QString("-f%1").arg(TTCut::mpeg2Target)
             << "-o"
             << (escapeFileNames
 									? toAscii(QString("\"%1\"").arg(createOutputFilePath(videoFilePath)))

@@ -1,16 +1,14 @@
 /*----------------------------------------------------------------------------*/
-/* COPYRIGHT: TriTime (c) 2003/2010 / www.tritime.org                         */
+/* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
-/* PROJEKT  : TTCUT 2005                                                      */
-/* FILE     : ttheaderlist.h                                                  */
+/* PROJEKT  : TTCUT 2019                                                      */
+/* FILE     : ttsubtitleheaderlist.h                                          */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : b. altendorf (E-Mail: b.altendorf@tritime.de)   DATE: 05/12/2005 */
-/* MODIFIED: b. altendorf                                    DATE: 06/20/2008 */
-/* MODIFIED:                                                 DATE:            */
+/* AUTHOR  : Minei3oat                                       DATE: 12/30/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// TTHEADERLIST
+// *** TTSUBTITLEHEADERLIST
 // ----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -19,9 +17,13 @@
 //
 //               +- TTAudioHeaderList 
 //               | 
-// TTHeaderList -+- TTSubtitleHeaderList
-//               |
+//               +- TTAudioIndexList
+// TTHeaderList -|
 //               +- TTVideoHeaderList
+//               |
+//               +- TTVideoIndexList
+//               |
+//               +- TTSubtitleHeaderList
 //
 // -----------------------------------------------------------------------------
 
@@ -41,33 +43,22 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTHEADERLIST_H
-#define TTHEADERLIST_H
+#ifndef TTSUBTITLEHEADERLIST_H
+#define TTSUBTITLEHEADERLIST_H
 
-#include "ttavheader.h"
-#include "common/ttmessagelogger.h"
+#include "ttheaderlist.h"
 
-#include <QVector>
-
-// -----------------------------------------------------------------------------
-// TTHeaderList: Pointer list for TTAVHeader objects
-// -----------------------------------------------------------------------------
-class TTHeaderList : public QVector<TTAVHeader*>
+class TTSubtitleHeaderList : public TTHeaderList
 {
  public:
-  virtual ~TTHeaderList();
+  TTSubtitleHeaderList( int size );
 
-  virtual void add( TTAVHeader* header );
-  virtual void deleteAll();
+  TTSubtitleHeader* subtitleHeaderAt( int index );
 
- protected:
-  TTHeaderList(int size);
-  virtual void sort() = 0;
-  virtual void checkIndexRange(int index);
+  int searchTimeIndex( double s_time );
 
  protected:
-  TTMessageLogger* log;
-  int              initial_size;
+  void sort();
 };
 
-#endif //TTHEADERLIST
+#endif //TTSUBTITLEHEADERLIST_H

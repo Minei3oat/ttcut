@@ -188,6 +188,32 @@ class TTBreakObject
   int stop_object_index;
   int restart_object_index;
 };
+
+// -----------------------------------------------------------------------------
+// *** TTSubtitleHeader: Base class for all subtitle header objects
+// -----------------------------------------------------------------------------
+class TTSubtitleHeader : public TTAVHeader
+{
+ public:
+  TTSubtitleHeader();
+
+  QString text();
+  void    setText(QString text);
+  QTime   startTime();
+  int     startMSec();
+  void    setStartTime(QTime start);
+  void    setStartTime(int mSec);
+  QTime   endTime();
+  int     endMSec();
+  void    setEndTime(QTime end);
+  void    setEndTime(int mSec);
+
+
+ protected:
+  QString mText;
+  int     mStartMSec;
+  int     mEndMSec;
+};
 #endif //TTAVHEADER_H
 
 

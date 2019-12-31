@@ -2,29 +2,14 @@
 /* COPYRIGHT: Minei3oat (c) 2019 / github.com/Minei3oat                       */
 /*----------------------------------------------------------------------------*/
 /* PROJEKT  : TTCUT 2019                                                      */
-/* FILE     : ttsrtsubtitlestream.h                                           */
+/* FILE     : ttsubtitletreeview.cpp                                          */
 /*----------------------------------------------------------------------------*/
-/* AUTHOR  : Minei3oat                                       DATE: 12/29/2019 */
+/* AUTHOR  : Minei3oat                                       DATE: 12/30/2019 */
 /*----------------------------------------------------------------------------*/
 
 // ----------------------------------------------------------------------------
-// TTSRTSUBTITLESTREAM
+// TTSUBTITLEFILELIST
 // ----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Overview
-// -----------------------------------------------------------------------------
-//
-//                               +- TTMpegAudioStream
-//             +- TTAudioStream -|
-//             |                 +- TTAC3AudioStream
-// TTAVStream -|
-//             |
-//             +- TTVideoStream - TTMpeg2VideoStream
-//             |
-//             +- TTSubtitleStream - TTSrtSubtitleStream
-//
-// -----------------------------------------------------------------------------
 
 /*----------------------------------------------------------------------------*/
 /* This program is free software; you can redistribute it and/or modify it    */
@@ -42,27 +27,57 @@
 /* Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.              */
 /*----------------------------------------------------------------------------*/
 
-#ifndef TTSRTSUBTITLESTREAM_H
-#define TTSRTSUBTITLESTREAM_H
+#ifndef TTSUBTITLEFILELIST_H
+#define TTSUBTITLEFILELIST_H
 
-#include "ttavstream.h"
-#include "common/ttmessagelogger.h"
+#include "ui_subtitlefilelistwidget.h"
 
-class TTSrtSubtitleStream : public TTSubtitleStream
+#include "common/ttcut.h"
+
+class TTAVData;
+class TTAVItem;
+class TTSubtitleItem;
+
+class QMenu;
+class QAction;
+
+class TTSubtitleTreeView : public QWidget, Ui::TTSubtitleFileListWidget
 {
+  Q_OBJECT
+
   public:
-    TTSrtSubtitleStream(const QFileInfo &f_info);
-    virtual ~TTSrtSubtitleStream();
+    TTSubtitleTreeView(QWidget* parent=0);
 
-    virtual TTAVTypes::AVStreamType streamType() const;
+    void setTitle (const QString& title);
+    void setControlEnabled(bool enabled);
+    void clear();
 
-    virtual void cut(int start, int end, TTCutParameter* cp);
+  signals:
+    void openFile();
+    void removeItem(int index);
+    void swapItems(int oldIndex, int newIndex);
 
-    virtual int  createHeaderList();
-    virtual int  createIndexList(){return 0;}
+  public slots:
+    void onAVDataChanged(const TTAVItem* avData);
+    void onItemUp();
+    void onItemDown();
+    void onRemoveItem();
+    void onItemRemoved(int index);
+    void onClearList();
+    void onContextMenuRequest(const QPoint& point);
+    void onAppendItem(const TTSubtitleItem& item);
+    void onSwapItems(int oldIndex, int newIndex);
+    void onReloadList(const TTAVItem* avData);
 
-    QString      streamExtension();
-    QTime        streamLengthTime();
+  private:
+    void createActions();
+
+  private:
+    const TTAVItem* mpAVItem;
+    QMenu*        contextMenu;
+    QAction*      itemUpAction;
+    QAction*      itemDownAction;
+    QAction*      itemDeleteAction;
+    QAction*      itemNewAction;
 };
-
-#endif // TTSRTSUBTITLESTREAM_H
+#endif

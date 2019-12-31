@@ -40,7 +40,7 @@ TTCutSettingsMuxer::TTCutSettingsMuxer(QWidget* parent)
 
   // enabled if we have a plugin for the muxer
   cbMuxerProg->setEnabled(false);
-  cbMuxTarget->setEnabled(false);
+  cbMuxTarget->setEnabled(true);
   pbConfigureMuxer->setEnabled(false);
 
   initMuxProgList();

@@ -43,6 +43,9 @@
 /*----------------------------------------------------------------------------*/
 
 #include "ttsrtsubtitlestream.h"
+#include "ttsubtitleheaderlist.h"
+#include "ttavheader.h"
+#include "data/ttcutparameter.h"
 
 // /////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
@@ -85,5 +88,68 @@ QTime TTSrtSubtitleStream::streamLengthTime()
 //! Cut the subtitle stream
 void TTSrtSubtitleStream::cut(int start, int end, TTCutParameter* cp)
 {
+  int index = header_list->searchTimeIndex(start);
+  cp->setCutOutIndex(cp->getCutInIndex()+end-start+1);
+  TTFileBuffer* stream_buffer = cp->getTargetStreamBuffer();
+  int picsWritten = cp->getNumPicturesWritten();
+  int offsett = cp->getCutInIndex()-start;
+
+  while (index < header_list->count())
+  {
+    TTSubtitleHeader* header = (TTSubtitleHeader*)header_list->at(index);
+    if (header->startMSec() > end)
+      return;
+
+    picsWritten++;
+    QTime subtitleEnd = header->endMSec() <= end ? header->endTime() : QTime::fromMSecsSinceStartOfDay(end);
+    QString subtitleCode = QString("%1\r\n%2 --> %3\r\n%4\r\n\r\n")
+        .arg(picsWritten)
+        .arg(header->startTime().addMSecs(offsett).toString("hh:mm:ss.zzz"))
+        .arg(subtitleEnd.addMSecs(offsett).toString("hh:mm:ss.zzz"))
+        .arg(header->text());
+    stream_buffer->directWrite((quint8*)subtitleCode.toUtf8().data(), subtitleCode.length());
+    cp->setNumPicturesWritten(picsWritten);
+  }
+}
+
+//! Read subtitles
+int TTSrtSubtitleStream::createHeaderList()
+{
+  header_list = new TTSubtitleHeaderList( 100 );
+
+  QString line;
+  int counter = -1;
+
+  while (!stream_buffer->atEnd())
+  {
+    while (line.isEmpty())
+    {
+      if (stream_buffer->atEnd())
+        return header_list->count();
+      line  = stream_buffer->readLine("\r\n");
+    }
+    line = stream_buffer->readLine("\r\n").simplified();
+    if (line.toInt() != counter + 1 && counter != -1)
+      log->warningMsg("TTSrtSubtitleStream", QString("Subtitles in %1 missing. Reading subtitle %2, last was %3.").arg(fileName()).arg(counter).arg(line));
+    counter = line.toInt();
+
+    line = stream_buffer->readLine("\r\n").simplified();
+    TTSubtitleHeader* header = new TTSubtitleHeader();
+    header->setStartTime(QTime::fromString(line.left(10), "hh:mm:ss.zzz"));
+    header->setEndTime(QTime::fromString(line.right(10), "hh:mm:ss.zzz"));
+
+    QString text;
+    do
+    {
+      line = stream_buffer->readLine("\r\n");
+      text += line + "\r\n";
+    }
+    while (!line.isEmpty());
+    header->setText(text.left(text.length()-2));
+
+    header_list->append(header);
+  }
+
+  return header_list->count();
 }
 
