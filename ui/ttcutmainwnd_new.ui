@@ -467,6 +467,7 @@
     </widget>
     <addaction name="actionOpenVideo"/>
     <addaction name="actionOpenAudio"/>
+    <addaction name="actionOpenSubtitle"/>
     <addaction name="separator"/>
     <addaction name="actionFileNew"/>
     <addaction name="actionFileOpen"/>
@@ -608,6 +609,21 @@
    </property>
    <property name="toolTip">
     <string>Open Audio...</string>
+   </property>
+  </action>
+  <action name="actionOpenSubtitle">
+   <property name="icon">
+    <iconset resource="ui/mainwindow.qrc">
+     <normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</normaloff>:/pixmaps/pixmaps/fileopen_16.xpm</iconset>
+   </property>
+   <property name="text">
+    <string>Open Subtitle...</string>
+   </property>
+   <property name="iconText">
+    <string>Open Subtitle...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Subtitle...</string>
    </property>
   </action>
  </widget>

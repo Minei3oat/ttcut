@@ -68,6 +68,7 @@ class TTCutMainWindow: public QMainWindow, Ui::TTCutMainWindowForm
 	public slots:
     void onOpenVideoFile();
     void onOpenAudioFile();
+    void onOpenSubtitleFile();
 		void onFileNew();
 		void onFileOpen();
 		void onFileSave();
@@ -82,6 +83,7 @@ class TTCutMainWindow: public QMainWindow, Ui::TTCutMainWindowForm
 
 		void onReadVideoStream(QString fName);
 		void onReadAudioStream(QString fName);
+		void onReadSubtitleStream(QString fName);
 
 		void onVideoSliderChanged(int value);
 
