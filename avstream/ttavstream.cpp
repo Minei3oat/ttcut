@@ -558,3 +558,10 @@ TTSubtitleStream::~TTSubtitleStream()
 {
 }
 
+// return pointer to current header list
+// -----------------------------------------------------------------------------
+TTSubtitleHeaderList* TTSubtitleStream::headerList()
+{
+  return header_list;
+}
+

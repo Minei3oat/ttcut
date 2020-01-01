@@ -30,6 +30,7 @@
 #include "ttsubtitlelist.h"
 #include "ttavlist.h"
 #include "avstream/ttavheader.h"
+#include "avstream/ttsubtitleheaderlist.h"
 #include "common/ttmessagelogger.h"
 #include "avstream/ttavstream.h"
 
@@ -71,9 +72,9 @@ TTSubtitleItem::TTSubtitleItem(const TTSubtitleItem& item)
  */
 void TTSubtitleItem::setItemData()
 {
-  subtitleLength = QString("%1 (%2 MB)")
+  subtitleLength = QString("%1 (%2)")
                         .arg(subtitleStream->streamLengthTime().toString("hh:mm:ss.zzz"))
-                        .arg((double)subtitleStream->streamLengthByte()/1024.0/1024.0);
+                        .arg(subtitleStream->headerList()->count());
 
   // FIXME: use real delay value for subtitle delay
   subtitleDelay  = "0";
