@@ -55,7 +55,7 @@ class TTSubtitleHeaderList : public TTHeaderList
 
   TTSubtitleHeader* subtitleHeaderAt( int index );
 
-  int searchTimeIndex( double s_time );
+  int searchTimeIndex( int search_time );
 
  protected:
   void sort();

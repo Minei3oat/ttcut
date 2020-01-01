@@ -102,13 +102,21 @@ void TTSrtSubtitleStream::cut(int start, int end, TTCutParameter* cp)
 
     picsWritten++;
     QTime subtitleEnd = header->endMSec() <= end ? header->endTime() : QTime::fromMSecsSinceStartOfDay(end);
-    QString subtitleCode = QString("%1\r\n%2 --> %3\r\n%4\r\n\r\n")
+    QString subtitleCode = QString("%1\r\n%2 --> %3\r\n%4")
         .arg(picsWritten)
         .arg(header->startTime().addMSecs(offsett).toString("hh:mm:ss.zzz"))
         .arg(subtitleEnd.addMSecs(offsett).toString("hh:mm:ss.zzz"))
         .arg(header->text());
+
     stream_buffer->directWrite((quint8*)subtitleCode.toUtf8().data(), subtitleCode.length());
+    // Needed, as when used inside subtitleCode, sometimes only one \r\n is written to file
+    stream_buffer->directWrite('\r');
+    stream_buffer->directWrite('\n');
+    stream_buffer->directWrite('\r');
+    stream_buffer->directWrite('\n');
+
     cp->setNumPicturesWritten(picsWritten);
+    index++;
   }
 }
 
@@ -126,26 +134,28 @@ int TTSrtSubtitleStream::createHeaderList()
     {
       if (stream_buffer->atEnd())
         return header_list->count();
-      line  = stream_buffer->readLine("\r\n");
+      line  = stream_buffer->readLine("\r\n").simplified();
     }
-    line = stream_buffer->readLine("\r\n").simplified();
     if (line.toInt() != counter + 1 && counter != -1)
       log->warningMsg("TTSrtSubtitleStream", QString("Subtitles in %1 missing. Reading subtitle %2, last was %3.").arg(fileName()).arg(counter).arg(line));
     counter = line.toInt();
 
     line = stream_buffer->readLine("\r\n").simplified();
     TTSubtitleHeader* header = new TTSubtitleHeader();
-    header->setStartTime(QTime::fromString(line.left(10), "hh:mm:ss.zzz"));
-    header->setEndTime(QTime::fromString(line.right(10), "hh:mm:ss.zzz"));
+    header->setStartTime(QTime::fromString(line.left(12), "hh:mm:ss,zzz"));
+    header->setEndTime(QTime::fromString(line.right(12), "hh:mm:ss,zzz"));
 
     QString text;
     do
     {
       line = stream_buffer->readLine("\r\n");
-      text += line + "\r\n";
+      text.append(line);
+      text.append("\r\n");
     }
     while (!line.isEmpty());
-    header->setText(text.left(text.length()-2));
+    while(text.right(2) == "\r\n")
+      text = text.left(text.length()-2);
+    header->setText(text);
 
     header_list->append(header);
   }

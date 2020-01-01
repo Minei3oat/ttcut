@@ -633,6 +633,7 @@ void TTCutMainWindow::closeProject()
 
   videoFileInfo->onAVDataChanged(mpAVData, 0);
   audioFileList->onAVDataChanged(0);
+  subtitleFileList->onAVDataChanged(0);
   streamNavigator->onAVItemChanged(0);
   currentFrame->onAVDataChanged(0);
   cutOutFrame->onAVDataChanged(0);
@@ -735,6 +736,7 @@ void TTCutMainWindow::onAVItemChanged(TTAVItem* avItem)
   currentFrame->onAVDataChanged(avItem);
   cutOutFrame->onAVDataChanged(avItem);
   audioFileList->onAVDataChanged(avItem);
+  subtitleFileList->onAVDataChanged(avItem);
 
   onNewFramePos( avItem->videoStream()->currentIndex() );
 
