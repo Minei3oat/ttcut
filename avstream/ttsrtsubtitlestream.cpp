@@ -148,6 +148,21 @@ int TTSrtSubtitleStream::createHeaderList()
   {
     emit statusReport(StatusReportArgs::Start, "Create subtitle-header list", stream_buffer->size());
 
+    QString lineEnd;
+    quint8 byte = 0;
+    quint8 lastByte = 0;
+    while (!stream_buffer->atEnd())
+    {
+      stream_buffer->readByte(byte);
+      if (byte == '\n')
+      {
+        lineEnd = lastByte == '\r' ? "\r\n" : "\n";
+        break;
+      }
+      lastByte = byte;
+    }
+    stream_buffer->seekAbsolute(0);
+
     QString line;
     int counter = -1;
 
@@ -157,13 +172,13 @@ int TTSrtSubtitleStream::createHeaderList()
       {
         if (stream_buffer->atEnd())
           return header_list->count();
-        line  = stream_buffer->readLine("\r\n").simplified();
+        line  = stream_buffer->readLine(lineEnd).simplified();
       }
       if (line.toInt() != counter + 1 && counter != -1)
         log->warningMsg("TTSrtSubtitleStream", QString("Subtitles in %1 missing. Reading subtitle %2, last was %3.").arg(fileName()).arg(counter).arg(line));
       counter = line.toInt();
 
-      line = stream_buffer->readLine("\r\n").simplified();
+      line = stream_buffer->readLine(lineEnd).simplified();
       TTSubtitleHeader* header = new TTSubtitleHeader();
       header->setStartTime(QTime::fromString(line.left(12), "hh:mm:ss,zzz"));
       header->setEndTime(QTime::fromString(line.right(12), "hh:mm:ss,zzz"));
@@ -171,7 +186,7 @@ int TTSrtSubtitleStream::createHeaderList()
       QString text;
       do
       {
-        line = stream_buffer->readLine("\r\n");
+        line = stream_buffer->readLine(lineEnd);
         text.append(line);
         text.append("\r\n");
       }
