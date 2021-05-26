@@ -268,6 +268,7 @@ bool TTMpeg2VideoStream::createHeaderListFromMpeg2()
   {
     time.start();
     emit statusReport(StatusReportArgs::Start, tr("Creating Mpeg2-Header List"), stream_buffer->size());
+    qApp->processEvents();
 
     while(!stream_buffer->atEnd())
     {
@@ -315,6 +316,7 @@ bool TTMpeg2VideoStream::createHeaderListFromMpeg2()
       }
 
       emit statusReport(StatusReportArgs::Step, QString(tr("Found %1 header")).arg(header_list->count()), stream_buffer->position());
+      qApp->processEvents();
     }
     log->debugMsg(__FILE__, __LINE__, QString("time for creating header list %1ms").
         arg(time.elapsed()));
@@ -325,6 +327,7 @@ bool TTMpeg2VideoStream::createHeaderListFromMpeg2()
   }
 
   emit statusReport(StatusReportArgs::Finished, tr("Mpeg2-Header list created"), stream_buffer->size());
+  qApp->processEvents();
 
   // write an idd file with the header information
   if (header_list->count() > 0 && TTCut::createVideoIDD )
@@ -537,16 +540,18 @@ void TTMpeg2VideoStream::cut(int cutInPos, int cutOutPos, TTCutParameter* cutPar
 
   log->debugMsg(__FILE__, __LINE__, QString("cut: cutIn %1 / cutOut %2").arg(cutInPos).arg(cutOutPos));
 
-  TTVideoHeader* startObject = getCutStartObject(cutInPos, cutParams);
+  TTVideoHeader* startObject = getCutStartObject(cutInPos, cutOutPos, cutParams);
   TTVideoHeader* endObject   = getCutEndObject(cutOutPos,  cutParams);
 
   log->debugMsg(__FILE__, __LINE__, QString("startObject: %1").arg(startObject->headerOffset()));
   log->debugMsg(__FILE__, __LINE__, QString("endObject:   %1").arg(endObject->headerOffset()));
 
-  transferCutObjects(startObject, endObject, cutParams);
+  if (startObject->headerOffset() < endObject->headerOffset()) {
+      transferCutObjects(startObject, endObject, cutParams);
 
-  if (cutOutPos > cutParams->getCutOutIndex())
-    encodePart(cutParams->getCutOutIndex()+1, cutOutPos, cutParams);
+      if (cutOutPos > cutParams->getCutOutIndex())
+        encodePart(cutParams->getCutOutIndex()+1, cutOutPos, cutParams);
+  }
 
   closeStream();
 }
@@ -555,7 +560,7 @@ void TTMpeg2VideoStream::cut(int cutInPos, int cutOutPos, TTCutParameter* cutPar
 /*! /////////////////////////////////////////////////////////////////////////////
  * Return the start object for current cut
  */
-TTVideoHeader* TTMpeg2VideoStream::getCutStartObject(int cutInPos, TTCutParameter* cutParams)
+TTVideoHeader* TTMpeg2VideoStream::getCutStartObject(int cutInPos, int cutOutPos, TTCutParameter* cutParams)
 {
   int iFramePos = cutInPos;
 
@@ -566,8 +571,12 @@ TTVideoHeader* TTMpeg2VideoStream::getCutStartObject(int cutInPos, TTCutParamete
   if (index_list->pictureCodingType(iFramePos) != 1)
   {
     iFramePos = index_list->moveToNextIndexPos(cutInPos, 1);
+    if (iFramePos <= cutOutPos)
+    {
+        cutOutPos = iFramePos-1;
+    }
 
-    encodePart(cutInPos, iFramePos-1, cutParams);
+    encodePart(cutInPos, cutOutPos, cutParams);
   }
 
   TTVideoHeader* start_object = checkIFrameSequence(iFramePos, cutParams);
@@ -681,7 +690,7 @@ quint64 TTMpeg2VideoStream::getByteCount(TTVideoHeader* startObject, TTVideoHead
  */
 void TTMpeg2VideoStream::transferCutObjects(TTVideoHeader* startObject, TTVideoHeader* endObject, TTCutParameter* cr)
 {
-  quint8    buffer[65536];
+  quint8    buffer[262144];
   quint64   bytesToWrite      = getByteCount(startObject, endObject);
   quint64   bufferStartOffset = startObject->headerOffset();
   int       numPicsWritten    = cr->getNumPicturesWritten();
@@ -706,9 +715,9 @@ void TTMpeg2VideoStream::transferCutObjects(TTVideoHeader* startObject, TTVideoH
 
   while( bytesToWrite > 0 )
   {
-   int bytesProcessed = (bytesToWrite < 65536)
+   int bytesProcessed = (bytesToWrite < 262144)
         ? stream_buffer->readByte(buffer, bytesToWrite)
-        : stream_buffer->readByte(buffer, 65536);
+        : stream_buffer->readByte(buffer, 262144);
 
     if (bytesProcessed <= 0)
       throw TTIOException(QString(tr("%1 bytes from stream buffer read")).arg(bytesProcessed));

@@ -51,6 +51,8 @@
 #include "data/ttcutlist.h"
 #include "data/ttcutparameter.h"
 
+#include <QCoreApplication>
+
 // /////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
 // *** TTAC3AudioStream: AC3 audio stream class
@@ -169,6 +171,7 @@ int TTAC3AudioStream::createHeaderList()
   try
   {
     emit statusReport(StatusReportArgs::Start, "Create audio-header list", stream_buffer->size());
+    qApp->processEvents();
 
     while (!stream_buffer->atEnd())
     {
@@ -197,8 +200,10 @@ int TTAC3AudioStream::createHeaderList()
       stream_buffer->seekRelative(audio_header->syncframe_words*2-8);
 
       emit statusReport(StatusReportArgs::Step, "Create audio-header list", stream_buffer->position());
+      qApp->processEvents();
     }
     emit statusReport(StatusReportArgs::Finished, "Audio-header list created", stream_buffer->position());
+    qApp->processEvents();
   }
   catch (TTFileBufferException)
   {

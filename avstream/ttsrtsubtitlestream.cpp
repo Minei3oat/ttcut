@@ -94,7 +94,7 @@ QTime TTSrtSubtitleStream::streamLengthTime()
 void TTSrtSubtitleStream::cut(int start, int end, TTCutParameter* cp)
 {
   int index = header_list->searchTimeIndex(start);
-  cp->setCutOutIndex(cp->getCutInIndex()+end-start+1);
+  cp->setCutOutIndex(cp->getCutInIndex()+end-start);
   TTFileBuffer* stream_buffer = cp->getTargetStreamBuffer();
   int picsWritten = cp->getNumPicturesWritten();
   int progress = 0;
@@ -114,19 +114,15 @@ void TTSrtSubtitleStream::cut(int start, int end, TTCutParameter* cp)
       return;
 
     picsWritten++;
-    QTime subtitleEnd = header->endMSec() <= end ? header->endTime() : QTime::fromMSecsSinceStartOfDay(end);
-    QString subtitleCode = QString("%1\r\n%2 --> %3\r\n%4")
+    QTime subtitleStart  = header->startMSec() <= start ? QTime::fromMSecsSinceStartOfDay(start) : header->startTime();
+    QTime subtitleEnd    = header->endMSec() <= end ? header->endTime() : QTime::fromMSecsSinceStartOfDay(end);
+    QString subtitleCode = QString("%1\r\n%2 --> %3\r\n%4\r\n\r\n")
         .arg(picsWritten)
-        .arg(header->startTime().addMSecs(offsett).toString("hh:mm:ss.zzz"))
-        .arg(subtitleEnd.addMSecs(offsett).toString("hh:mm:ss.zzz"))
+        .arg(subtitleStart.addMSecs(offsett).toString("hh:mm:ss,zzz"))
+        .arg(subtitleEnd.addMSecs(offsett).toString("hh:mm:ss,zzz"))
         .arg(header->text());
 
-    stream_buffer->directWrite((quint8*)subtitleCode.toUtf8().data(), subtitleCode.length());
-    // Needed, as when used inside subtitleCode, sometimes only one \r\n is written to file
-    stream_buffer->directWrite('\r');
-    stream_buffer->directWrite('\n');
-    stream_buffer->directWrite('\r');
-    stream_buffer->directWrite('\n');
+    stream_buffer->directWrite((quint8*)subtitleCode.toUtf8().data(), subtitleCode.toUtf8().length());
 
     cp->setNumPicturesWritten(picsWritten);
     index++;
@@ -134,7 +130,6 @@ void TTSrtSubtitleStream::cut(int start, int end, TTCutParameter* cp)
     emit statusReport(StatusReportArgs::Step, "Subtitle-cut: copy subtitle", progress);
     qApp->processEvents();
   }
-  emit statusReport(StatusReportArgs::Step, "Subtitle-cut: copy segment", progress);
   emit statusReport(StatusReportArgs::Finished, "Subtitle-cut: finished", progress);
   qApp->processEvents();
 }
@@ -147,6 +142,7 @@ int TTSrtSubtitleStream::createHeaderList()
   try
   {
     emit statusReport(StatusReportArgs::Start, "Create subtitle-header list", stream_buffer->size());
+    qApp->processEvents();
 
     QString lineEnd;
     quint8 byte = 0;
@@ -198,8 +194,10 @@ int TTSrtSubtitleStream::createHeaderList()
       header_list->append(header);
 
       emit statusReport(StatusReportArgs::Step, "Create subtitle-header list", stream_buffer->position());
+      qApp->processEvents();
     }
     emit statusReport(StatusReportArgs::Finished, "Subtitle-header list created", stream_buffer->position());
+    qApp->processEvents();
   }
   catch (TTFileBufferException)
   {

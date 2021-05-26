@@ -35,6 +35,23 @@
 /* ////////////////////////////////////////////////////////////////////////////
  * Construct object
  */
+TTFileBuffer::TTFileBuffer(QString name, QIODevice::OpenMode mode, int bufferSize)
+{
+  this->file = new QFile(name);
+  this->mode = mode;
+
+  if (this->mode == QIODevice::WriteOnly)
+    file->resize(0);
+
+  initInstance(bufferSize);
+  initTSearch();
+
+  open();
+}
+
+/* ////////////////////////////////////////////////////////////////////////////
+ * Construct object
+ */
 TTFileBuffer::TTFileBuffer(QString name, QIODevice::OpenMode mode)
 {
   this->file = new QFile(name);
@@ -65,9 +82,8 @@ TTFileBuffer::~TTFileBuffer()
 /* /////////////////////////////////////////////////////////////////////////////
  *
  */
-void TTFileBuffer::initInstance()
+void TTFileBuffer::initInstance(int bufferSize)
 {
-  bufferSize = 16384;
   bufferMask = bufferSize-1;
   readInc    = bufferSize/2;
   isAtEnd    = false;
@@ -75,6 +91,14 @@ void TTFileBuffer::initInstance()
   writePos   = -1;
 
   cBuffer = new quint8[bufferSize];
+}
+
+/* /////////////////////////////////////////////////////////////////////////////
+ *
+ */
+void TTFileBuffer::initInstance()
+{
+  initInstance(16384);
 }
 
 /* /////////////////////////////////////////////////////////////////////////////

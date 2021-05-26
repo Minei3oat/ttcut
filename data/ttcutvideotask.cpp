@@ -98,7 +98,7 @@ void TTCutVideoTask::operation()
   if (mTgtFilePath.isEmpty())
     throw new TTInvalidOperationException(__FILE__, __LINE__, tr("No target file path given for video cut!"));
 
- 	mpTgtStream = new TTFileBuffer(mTgtFilePath, QIODevice::WriteOnly);
+    mpTgtStream = new TTFileBuffer(mTgtFilePath, QIODevice::WriteOnly, 262144);
   mpCutParams = new TTCutParameter(mpTgtStream);
 
 	mpCutParams->setIsWriteSequenceEnd(true);

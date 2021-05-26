@@ -53,6 +53,7 @@
 #include "data/ttcutparameter.h"
 
 #include <math.h>
+#include <QCoreApplication>
 
 // /////////////////////////////////////////////////////////////////////////////
 // -----------------------------------------------------------------------------
@@ -223,6 +224,7 @@ int TTMPEGAudioStream::createHeaderList( )
   try
   {
     emit statusReport(StatusReportArgs::Start, "Create audio-header list", stream_buffer->size());
+    qApp->processEvents();
 
     while ( !stream_buffer->atEnd() )
     {
@@ -258,9 +260,11 @@ int TTMPEGAudioStream::createHeaderList( )
       stream_buffer->seekRelative( audio_header->frame_length-4 );
 
       emit statusReport(StatusReportArgs::Step, "Create audio-header list", stream_buffer->position());
+      qApp->processEvents();
     }
 
     emit statusReport(StatusReportArgs::Finished, "Audio-header list created", stream_buffer->position());
+    qApp->processEvents();
   }
   catch (TTFileBufferException)
   {

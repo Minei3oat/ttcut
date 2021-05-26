@@ -82,7 +82,7 @@ class TTMpeg2VideoStream : public TTVideoStream
 
     virtual void cut(int start, int end, TTCutParameter* cp);
 
-    TTVideoHeader* getCutStartObject(int cutInPos, TTCutParameter* cutParams);
+    TTVideoHeader* getCutStartObject(int cutInPos, int cutOutPos, TTCutParameter* cutParams);
     TTVideoHeader* getCutEndObject(int cutOutPos, TTCutParameter* cutParams);
     TTVideoHeader* checkIFrameSequence(int iFramePos, TTCutParameter* cutParams);
     void transferCutObjects(TTVideoHeader* startObject, TTVideoHeader* endObject, TTCutParameter* cutParams);

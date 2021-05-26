@@ -40,7 +40,8 @@ class TTFileBuffer
 {
 public:
   // create / delete
-  TTFileBuffer(QString name, QIODevice::OpenMode mode);
+    TTFileBuffer(QString name, QIODevice::OpenMode mode);
+    TTFileBuffer(QString name, QIODevice::OpenMode mode, int bufferSize);
   ~TTFileBuffer();
 
   // file stream
@@ -82,6 +83,7 @@ public:
 
  protected:
   void    initInstance();
+  void    initInstance(int bufferSize);
   void    fillBuffer();
   void    fillBuffer(int length);
   quint8  readByte();

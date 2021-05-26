@@ -198,18 +198,15 @@ QStringList TTMplexProvider::createMplexArguments(const QString& videoFilePath, 
 
   mplexArgs << QString("-f%1").arg(TTCut::mpeg2Target)
             << "-o"
-            << (escapeFileNames
-									? toAscii(QString("\"%1\"").arg(createOutputFilePath(videoFilePath)))
-									: toAscii(QString("%1").arg(createOutputFilePath(videoFilePath))))
-            << (escapeFileNames
-									? toAscii(QString("\"%1\"").arg(videoFilePath))
-			            : toAscii(QString("%1").arg(videoFilePath)));
+            << (escapeFileNames ? QString("\"%1\"").arg(createOutputFilePath(videoFilePath))
+                                : QString("%1").arg(createOutputFilePath(videoFilePath)))
+            << (escapeFileNames ? QString("\"%1\"").arg(videoFilePath)
+                                : QString("%1").arg(videoFilePath));
 
   QStringListIterator listIterator(audioFilePaths);
   while(listIterator.hasNext())
-    mplexArgs << (escapeFileNames
-						? toAscii(QString("\"%1\"").arg(listIterator.next()))
-						: toAscii(QString("%1").arg(listIterator.next())));
+    mplexArgs << (escapeFileNames ? QString("\"%1\"").arg(listIterator.next())
+                                  : QString("%1").arg(listIterator.next()));
 
   return mplexArgs;
 }
